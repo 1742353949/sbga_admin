@@ -1,0 +1,19 @@
+{
+	"data":{
+		"de_5_user":{"quju_name":"","T_rate":"","h_rate":"","z_rate":""},
+		"de_10_line":{"quju_name":"","T_rate":"","h_rate":"","z_rate":""},
+		"de_2_line":{"quju_name":"","T_rate":"","h_rate":"","z_rate":""},
+		"re_2_line":{"quju_name":"","T_rate":"","h_rate":"","z_rate":""},
+		"re_100_user":{"quju_name":"","T_rate":"","h_rate":"","z_rate":""},
+		"re_500_line":{"quju_name":"","T_rate":"","h_rate":"","z_rate":""},
+		"target":{
+			"defect":{"quju_name":"","rate":"","total_num":"","finish_num":"","not_num":""},
+			"operate":{"quju_name":"","rate":"","total_num":"","finish_num":"","not_num":""},
+			"repair":{"quju_name":"","rate":"","total_num":"","finish_num":"","not_num":""},
+			"turn":{"quju_name":"","rate":"","total_num":"","finish_num":"","not_num":""},
+			"work":{"quju_name":"","rate":"","total_num":"","finish_num":"","not_num":""}
+		}
+	},
+	"msg":"success",
+	"status":0
+}

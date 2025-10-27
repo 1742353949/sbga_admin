@@ -1,0 +1,700 @@
+<!--********************************************************************
+* Copyright© 2000 - 2024 SuperMap Software Co.Ltd. All rights reserved.
+*********************************************************************-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title > 清塘点株</title>
+    <!-- <script type="text/javascript" src= "{{staticIP}}/js/include-web.js?id=1"></script>
+    <script type="text/javascript" src="{{staticIP}}/dist/ol/include-ol.js?id=1"></script> -->
+    <link href="https://iclient.supermap.io/web/libs/openlayers/7.5.2/ol.min.css" rel="stylesheet" />
+    <link href='https://iclient.supermap.io/dist/ol/iclient-ol.min.css' rel='stylesheet' />
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/openlayers/7.5.2/ol.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/dist/ol/iclient-ol.min.js"></script>
+    <!-- <script type="text/javascript" include="bootstrap,widgets.alert" src="/static/js/include-web.js"></script> -->
+   <script type="text/javascript" src="/static/locales/zh-CN/resources.js"></script>
+    <script type="text/javascript" src="/static/js/tokengenerator.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/i18next/i18next.min.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/jquery-i18next/jquery-i18next.min.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/css-vars-ponyfill/2.4.8/css-vars-ponyfill.min.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/compare-versions/5.0.3/index.min.js"></script> 
+    <script type="text/javascript" src="/static/js/utils.js"></script>
+    <script type="text/javascript" src="/static/js/localization.js"></script>
+    <script>Localization.initializeI18N('/static/', function () {Localization.localize();Localization.initGlobal();}); </script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://iclient.supermap.io/web/libs/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/widgets.js"></script>
+    <link rel="stylesheet" href="https://iclient.supermap.io/web/libs/openlayers/7.5.2/ol.min.css">
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/openlayers/7.5.2/ol.js"></script>
+    <script type="text/javascript" src="/static/dist/ol/iclient-ol-es6.min.js"></script>
+    <link rel="stylesheet" href="/static/dist/ol/iclient-ol.min.css">
+    <script type="text/javascript" src="/static/js/Vue.js"></script>
+    <!-- <script type="text/javascript" src="/static/dist/ol/include-ol.js"></script> -->
+    <style>
+        #toolbar {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          text-align: center;
+          z-index: 1000;
+          border-radius: 4px;
+          padding: 10px;
+        }
+        #allData{
+          position: absolute;
+          text-align: center;
+          z-index: 1000;
+          width:90%;
+          height: 90%;
+          top: 50px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36D399',
+                        neutral: '#F8FAFC',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+            .shadow-soft {
+                box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            }
+        }
+    </style>
+  </head>
+  <body  style=" margin: 0;overflow: hidden;background: #fff;width: 100%;height:100%; position: absolute;top: 0;">
+    <div id="map" style="width: 100%;height:100%"></div>
+  
+    <div id="app">
+    <div id="toolbar" class="panel panel-primary">
+        <div class="flex justify-between items-center mb-6">
+            <button  class="toggleBtn bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg flex items-center transition-all-300 transform hover:scale-105">
+                <i class="fa fa-eye mr-2"></i><span>显示数据</span>
+            </button>
+        </div>
+        <div class='panel-heading'>
+            <!-- <h5 class='panel-title text-center' data-i18n="resources.title_queryByGeometry"></h5></div> -->
+            <h5 class='panel-title text-center'>种植详情<div class="rate" style="display: none;">98.9%</div></h5></div>
+           
+           
+            
+            <!-- <div class='panel-body content'>
+            <input type="button" class="btn btn-default" data-i18n="[value]resources.btn_point" onclick="query('Point')"/>
+            <input type="button" class="btn btn-default" data-i18n="[value]resources.btn_line" onclick="query('LineString')"/>
+            <input type="button" class="btn btn-default" data-i18n="[value]resources.btn_rectangle" onclick="query('Circle')"/>
+            <input type="button" class="btn btn-default" data-i18n="[value]resources.btn_polygon" onclick="query('Polygon')"/>
+            <input type="button" class="btn btn-default" data-i18n="[value]resources.text_input_value_clear" onclick="clearFeatures()"/>
+        </div> -->
+        <div id="">
+            <div>
+                <ul style="list-style-type: none; float: left;position: relative;text-align: left;">
+                    <!-- <li>编号：</li> -->
+                    <li>种植者名称：</li>
+                    <li>种植者编号：</li>
+                    <li>手机号：</li>
+                    <li>行政区划：</li>
+                    <li>烟叶品种：</li>
+                    <li>约定种植面积(亩)：</li>
+                    <li>实际种植面积(亩)：</li>
+                    <li>差值(亩)：</li>
+                    <li>数量(株)：</li>
+                    <li>约定总收购量：</li>
+                    <li>指令性收购量：</li>
+                    <li>出口备货收购量：</li>
+        
+                </ul>
+                <ul style="list-style-type: none; float: left;position: relative;text-align: left;">
+                    <!-- <li class="id"></li> -->
+                    <li class="name"></li>
+                    <li class="code"></li>
+                    <li class="phone"></li>
+                    <li class="administrative_division"></li>
+                    <li class="type"></li>
+                    <li class="area"></li>
+                    <li class="sj_area"></li>
+                    <li class="c_area"></li>
+                    <li class="num"></li>
+                    <li class="agreed_num"></li>
+                    <li class="must_num"></li>
+                    <li class="exit_num"></li>
+                </ul>
+                <div class='panel-heading'>
+                    <!-- <h5 class='panel-title text-center' data-i18n="resources.title_queryByGeometry"></h5></div> -->
+                    <h5 class='panel-title text-left'>种植列表<div class="rate" style="display: none;">98.9%</div></h5></div>
+                <div class="max-h-[400px] overflow-y-auto" >
+                    <div v-for="one in info" :key="one.smid" >
+                        <div style="border:blue  1px solid;width: 95%;margin: 10px;height: 100px;">
+                            <ul style="list-style-type: none; float: left;position: relative;text-align: left;">
+                                <li>编号：</li>
+                                <li>种植者名称：</li>
+                                <li>实际种植面积(亩)：</li>
+                                <li>数量(株)：</li>
+                            </ul>
+                            <ul style="list-style-type: none; float: left;position: relative;text-align: left;">
+                                <li class="">[[one.SMID]]</li>
+                                <li class="">[[one.USERNAME]]</li>
+                                <li class="">[[one.SMAREA * 0.0015 | toFixed2]]</li>
+                                <li class="">[[one.SMAREA * 0.0015 * 1200 | round]]</li>
+                                <!-- <li class="code"></li>
+                                <li class="phone"></li>
+                                <li class="administrative_division"></li>
+                                <li class="type"></li>
+                                <li class="area"></li>
+                                <li class="sj_area"></li>
+                                <li class="num"></li>
+                                <li class="agreed_num"></li>
+                                <li class="must_num"></li>
+                                <li class="exit_num"></li> -->
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </div>
+                    
+            </div>
+     
+        </div>
+      </div>
+      <div id="allData" class="hidden">
+        <div class="container mx-auto px-1 py-12 max-w-12xl max-h-12xl">
+            <div class="bg-white rounded-xl shadow-soft p-1 mb-8 transform hover:shadow-md transition-all-300">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl px-8 font-semibold text-gray-800">种植合计</h3>
+                    <button id="exportBtn" class="bg-primary hover:bg-primary/90 text-white  px-3 py-2 rounded-lg flex items-center transition-all-300 transform hover:scale-105">
+                        <i class="fa fa-file-excel-o mr-2"></i>
+                        <span>导出Excel</span>
+                    </button>
+                    <!-- <button class="toggleBtn bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg flex items-center transition-all-300 transform hover:scale-105">
+                        <i class="fa fa-eye mr-2"></i><span>显示数据</span>
+                    </button> -->
+                    
+                </div>
+                
+                <div class="overflow-x-auto  max-h-[800px] overflow-y-auto">
+                    <table id="dataTable" class="min-w-full divide-y divide-gray-500">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">种植者名称</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">种植者编号</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">手机号</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">行政区划</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">烟叶品种</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">约定种植面积(亩)</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">实际种植面积(亩)</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">差值(亩)</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">数量(株)</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">实际数量(株)</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">约定总收购量</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">指令性收购量</th>
+                                <th scope="col" class="px-1 py-3 text-left text-xl font-medium text-gray-500 uppercase tracking-wider">出口备货收购量</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200 ">
+                            <tr v-for="one in allInfo" :key="one.id" class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.name]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.code]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.phone]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.administrative_division]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.type]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.area ]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.sj_area | toFixed2]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.c_area | toFixed2]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.num]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.sj_num | round]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.agreed]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.must_num]]</td>
+                                <td class="px-6 py-4 text-left whitespace-nowrap">[[one.exit]]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+  </div>
+    
+<!-- <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script> -->
+<script src="/static/js/xlsx.full.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const exportBtn = document.getElementById('exportBtn');
+        const dataTable = document.getElementById('dataTable');
+        exportBtn.addEventListener('click', function() {
+            // 显示加载状态
+            exportBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i><span>正在导出...</span>';
+            exportBtn.disabled = true;
+            // 添加导出动画效果
+            const originalBgColor = exportBtn.style.backgroundColor;
+            exportBtn.style.backgroundColor = '#0F46D3';
+            
+            // 使用setTimeout模拟处理延迟
+            setTimeout(() => {
+                try {
+                    // 创建工作簿
+                    const wb = XLSX.utils.book_new();
+                    
+                    // 从表格创建工作表
+                    const ws = XLSX.utils.table_to_sheet(dataTable);
+                    
+                    // 将工作表添加到工作簿
+                    XLSX.utils.book_append_sheet(wb, ws, "数据表格");
+                    
+                    // 生成Excel文件并下载
+                    XLSX.writeFile(wb, "表格数据.xlsx");
+                    
+                    // 显示成功状态
+                    exportBtn.innerHTML = '<i class="fa fa-check mr-2"></i><span>导出成功</span>';
+                    exportBtn.classList.remove('bg-primary');
+                    exportBtn.classList.add('bg-secondary');
+                    
+                    // 3秒后恢复按钮状态
+                    setTimeout(() => {
+                        exportBtn.innerHTML = '<i class="fa fa-file-excel-o mr-2"></i><span>导出Excel</span>';
+                        exportBtn.disabled = false;
+                        exportBtn.classList.remove('bg-secondary');
+                        exportBtn.classList.add('bg-primary');
+                        exportBtn.style.backgroundColor = originalBgColor;
+                    }, 3000);
+                } catch (error) {
+                    console.error("导出Excel失败:", error);
+                    
+                    // 显示错误状态
+                    exportBtn.innerHTML = '<i class="fa fa-exclamation-triangle mr-2"></i><span>导出失败</span>';
+                    exportBtn.classList.remove('bg-primary');
+                    exportBtn.classList.add('bg-red-500');
+                    
+                    // 3秒后恢复按钮状态
+                    setTimeout(() => {
+                        exportBtn.innerHTML = '<i class="fa fa-file-excel-o mr-2"></i><span>导出Excel</span>';
+                        exportBtn.disabled = false;
+                        exportBtn.classList.remove('bg-red-500');
+                        exportBtn.classList.add('bg-primary');
+                        exportBtn.style.backgroundColor = originalBgColor;
+                    }, 3000);
+                }
+            }, 800);
+        });
+    });
+
+    $(document).ready(function() {
+            const toggleBtn = $('.toggleBtn');
+            const allData = $('#allData');
+            
+            toggleBtn.on('click', function() {
+                // 切换元素显示/隐藏状态
+                allData.toggleClass('hidden');
+                
+                // 更新按钮文本和图标
+                if (allData.hasClass('hidden')) {
+                    toggleBtn.html('<i class="fa fa-eye mr-2"></i><span>显示数据</span>');
+                } else {
+                    toggleBtn.html('<i class="fa fa-eye-slash mr-2"></i><span>隐藏数据</span>');
+                }
+                
+                // 添加按钮点击动画
+                toggleBtn.addClass('scale-95');
+                setTimeout(() => {
+                    toggleBtn.removeClass('scale-95');
+                }, 200);
+            });
+        });
+</script>
+
+<script type="text/javascript">
+
+   var vue = new Vue({
+        el: "#app",
+        delimiters: ['[[', ']]'],
+        data: {
+            message: "Hello Vue!",
+            info:[],
+            allInfo:[]
+
+         },
+         filters: {
+            round(value) {
+                return Math.round(value);
+            },
+            toFixed2(value){
+                return value.toFixed(2);
+            }
+        },
+     });
+        
+    var map, source, resultLayer, draw
+        // baseUrl = (window.isLocal ? window.server : "https://iserver.supermap.io")+"/iserver/services/map-world/rest/maps/World",
+        // url = (window.isLocal ? window.server : "https://iserver.supermap.io")+"/iserver/services/data-world/rest/data";
+        // var datasetNames = ["World:Countries"];
+
+
+        // var url = "http://132.232.137.173:8090/iserver/services/map-BS_Data-2/rest/maps/bs2dmap%402dmap"
+        baseUrl = (window.isLocal ? window.server : "http://132.232.137.173:8090")+"/iserver/services/map-BS_MG/rest/maps/BS_MG@map",
+        url = (window.isLocal ? window.server : "http://132.232.137.173:8090")+"/iserver/services/data-BS_MG/rest/data";
+        var datasetNames = ["Grid:BS_MG_grid"];
+        var queryDatasetName = "Grid@BS_MG_grid"
+
+    map = new ol.Map({
+        target: 'map',
+        // ol v7版本用法为ol.control.defaults.defaults； v6版本以下用法为ol.control.defaults
+        controls: ol.control.defaults.defaults({attributionOptions: {collapsed: false}})
+            .extend([new ol.supermap.control.Logo({ link: "https://iclient.supermap.io" })]),
+        view: new ol.View({
+            center: [451262.2934470776, 2687711.1469943016],
+            // center: [0, 0],
+            zoom:17,
+            projection: 'EPSG:3857',
+            // projection: 'EPSG:4326',
+            multiWorld: true
+        })
+    });
+    var layer = new ol.layer.Tile({
+        source: new ol.source.TileSuperMapRest({
+            url: baseUrl
+        }),
+        projection: 'EPSG:3857'
+        // projection: 'EPSG:4326'
+    });
+    source = new ol.source.Vector();
+    var vectorLayer = new ol.layer.Vector({
+        source: source
+    });
+    map.addLayer(layer);
+    map.addLayer(vectorLayer);
+
+    function query(type) {
+        clearFeatures();
+        draw = new ol.interaction.Draw({
+          source: source,
+          type: type,
+          geometryFunction: type ==='Circle' && ol.interaction.Draw.createBox()
+        });
+        map.addInteraction(draw);
+        draw.on('drawend', drawCompleted);
+    }
+
+    function sqlquery() {
+        clearFeatures();
+        // var sql = document.getElementById("sql").value || "SMID > 100";
+        var sql = "SMID > 0";
+        var sqlParam = new ol.supermap.GetFeaturesBySQLParameters({
+            queryParameter: {
+                // name: "Countries@World",
+                name: "YanYe_grid@BS_YanYe_grid",
+            },
+            datasetNames: datasetNames,
+            toIndex:-1
+
+        });
+        new ol.supermap.FeatureService(url).getFeaturesBySQL(sqlParam).then(function (serviceResult) {
+            console.log(serviceResult.result.features)
+
+            var features = serviceResult.result.features;
+            var features_list = features.features;
+            console.log(features_list)
+            var featuresRed = [];
+            var featuresBlue = [];
+            for(var i = 0;i<features_list.length;i++){
+                var area = features_list[i].properties.SMAREA;
+                var sjcl = Math.ceil(area);
+                var max = sjcl+5;
+                var min = sjcl-5
+                var yjcl = Math.random() * (max - min + 1) + min;
+                var num = area * 2.75;
+                if(yjcl<sjcl){
+                    featuresRed.push(features_list[i])
+                }else{
+                    featuresBlue.push(features_list[i])
+                }
+            }
+            console.log(featuresBlue);
+            console.log(featuresRed)
+            var red ,blue ;
+            red = blue = features;
+            red.features = featuresRed;
+            blue.features = featuresBlue;
+
+            var vectorSource = new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(red),
+                wrapX: false
+            });
+
+            var vectorSource1 = new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(blue),
+                wrapX: false
+            });
+
+            resultLayer = new ol.layer.Vector({
+                source: vectorSource,
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'red',
+                        width: 2
+                    }),
+                    fill: new ol.style.Fill({
+                        color: 'rgba(0, 0, 255, 0.1)'
+                    })
+                })
+            });
+            resultLayer1 = new ol.layer.Vector({
+                source: vectorSource1,
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'green',
+                        width: 2
+                    }),
+                    fill: new ol.style.Fill({
+                        color: 'rgba(0, 0, 255, 0.1)'
+                    })
+                })
+            });
+            map.addLayer(resultLayer);
+            // map.addLayer(resultLayer1);
+        });
+    }
+
+    function Namequery(name,area) {
+        clearFeatures();
+        // name = "李金龙"
+        var sql = "USERNAME = '" + name + "'";
+        var sqlParam = new ol.supermap.QueryBySQLParameters({
+            queryParameter: {
+                name: queryDatasetName,  // 确保数据集名称正确
+                attributeFilter: sql
+            },
+            datasetNames: datasetNames,
+            toIndex: -1
+        });
+        
+
+        new ol.supermap.FeatureService(url).getFeaturesBySQL(sqlParam).then(function (serviceResult) {
+            console.log("种植者种植地")
+            console.log(serviceResult.result)
+
+            var features = serviceResult.result.features;
+            var features_list = features.features;
+            console.log(features_list)
+            var sj_area = 0;
+            vue.info = [];
+            for(var i = 0;i<features_list.length;i++){
+                var info = features_list[i].properties;
+                vue.info.push(info)
+                sj_area += Number(info.SMAREA);
+            }
+            sj_area = sj_area * 0.0015
+            console.log(sj_area)
+            $(".sj_area").html(sj_area.toFixed(2))
+            $(".c_area").html((area-sj_area).toFixed(2))
+            var rate = sj_area/area*100;
+            if(rate>60){
+                
+            }
+            $(".rate").html(sj_area/area*100 + "%")
+            var vectorSource = new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(features),
+                wrapX: false
+            });
+
+            var vectorSource1 = new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(features),
+                wrapX: false
+            });
+
+            if(sj_area>=area){
+                resultLayer = new ol.layer.Vector({
+                source: vectorSource,
+                style: function(feature){
+                    return new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'blue',
+                        width: 2
+                    }),
+                    fill: new ol.style.Fill({
+                        color: 'rgba(0, 0, 255, 0.1)'
+                    }),
+                    // 添加 label 样式
+                    text: new ol.style.Text({
+                        text: feature.get('SMID') || '',
+                        font: '12px Calibri,sans-serif',
+                        fill: new ol.style.Fill({ color: '#000' }),
+                        stroke: new ol.style.Stroke({
+                            color: '#fff',
+                            width: 3
+                        })
+                    })
+                })
+                } 
+            });
+            }else{
+                resultLayer = new ol.layer.Vector({
+                source: vectorSource,
+                style: function(feature){
+                    return new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'red',
+                        width: 2
+                    }),
+                    fill: new ol.style.Fill({
+                        color: 'rgba(0, 0, 255, 0.1)'
+                    }),
+                    // 添加 label 样式
+                    text: new ol.style.Text({
+                        text: feature.get('SMID') || '',
+                        font: '12px Calibri,sans-serif',
+                        fill: new ol.style.Fill({ color: '#000' }),
+                        stroke: new ol.style.Stroke({
+                            color: '#fff',
+                            width: 3
+                        })
+                    })
+                })
+                }
+            });
+            }
+
+            
+            resultLayer1 = new ol.layer.Vector({
+                source: vectorSource1,
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'blue',
+                        width: 2
+                    }),
+                    fill: new ol.style.Fill({
+                        color: 'rgba(0, 0, 255, 0.1)'
+                    })
+                })
+            });
+            map.addLayer(resultLayer);
+
+        
+        
+    
+    });
+    }
+
+    function drawCompleted(e) {
+        clearFeatures()
+        geo = e.feature.getGeometry();
+        var geometryParam = new ol.supermap.GetFeaturesByGeometryParameters({
+            // datasetNames: ["World:Countries"],
+            datasetNames: datasetNames,
+            geometry: geo,
+            spatialQueryMode: "INTERSECT"
+        });
+        new ol.supermap.FeatureService(url).getFeaturesByGeometry(geometryParam).then(function (serviceResult) {
+            console.log(serviceResult.result.features.features[0].properties)
+           
+
+            var info = serviceResult.result.features.features[0].properties;
+            var num = Math.floor(info.SMAREA * 2.75);
+            var max = num + 100;
+            var min = num - 100;
+            var rate = (Math.random() * (99.1 - 97.8 ) + 97.8).toFixed(4)
+            var area = Number(info.SMAREA);
+            
+            var vectorSource = new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(serviceResult.result.features),
+                wrapX: false
+            });
+            // resultLayer = new ol.layer.Vector({
+            //     source: vectorSource,
+            //     style: new ol.style.Style({
+            //         stroke: new ol.style.Stroke({
+            //             color: 'red',
+            //             width: 2
+            //         }),
+            //         fill: new ol.style.Fill({
+            //             color: 'rgba(0, 0, 255, 0.1)'
+            //         })
+            //     })
+            // });
+            // map.addLayer(resultLayer);
+            $.post('/bs_mg/getPlantingInfo', {
+                name: info.USERNAME
+            }, function(data) {
+                console.log('提交成功:', data);
+                data = data.data[0];
+                $(".id").html(info.SMID);
+                $(".name").html(data.name)
+                // $(".name").html("瑞丽姐相")
+                $(".username").html(info.USERNAME)
+                // $(".type").html(info.TYPE)
+                $(".type").html(data.type)
+                $(".code").html(data.code);
+                $(".phone").html(data.phone);
+                $(".administrative_division").html(data.administrative_division);
+                $(".administrative_division").html(data.administrative_division);
+                $(".yjcl").html(Math.floor(Math.random() * (max - min + 1) + min))
+                $(".sjcl").html(Math.floor(info.SMAREA * 2.75))
+                $(".sj_area").html(area.toFixed(2))
+                $(".area").html(data.area)
+                // $(".num").html(Math.floor(info.SMAREA * 2.75))
+                $(".num").html(data.num)
+                $(".rate").html(rate + "%")
+                $(".agreed_num").html(data.agreed_num)
+                $(".must_num").html(data.must_num)
+                $(".exit_num").html(data.exit_num)
+                Namequery(data.name,data.area)
+
+            }, 'json');
+        });
+    }
+
+    function clearFeatures() { 
+      draw && map.removeInteraction(draw);
+      if(resultLayer){
+        map.removeLayer(resultLayer);
+      }
+      if(source){
+        source.clear();
+      }
+    }
+
+    sqlquery()
+
+    function getAllGridInfo(){
+        $.post('/bs_mg/getAllInfo',  function(data) {
+                console.log('获取合计数据提交成功:', data);
+               vue.allInfo = data.data;
+
+            }, 'json');
+    }
+    getAllGridInfo();
+
+
+    // 处理鼠标点击事件
+    map.on('click', function (evt) {
+      var coordinate = evt.coordinate;
+      console.log(map)
+      console.log(evt.coordinate)
+      var lonLat = evt.coordinate;
+      console.log('经度: ' + lonLat[0] + ', 纬度: ' + lonLat[1]);
+      query("Point")
+
+    });
+</script>
+  </body>
+</html>

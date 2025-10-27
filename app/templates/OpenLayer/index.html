@@ -1,0 +1,325 @@
+<!--********************************************************************
+* Copyright© 2000 - 2024 SuperMap Software Co.Ltd. All rights reserved.
+*********************************************************************-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title > 地块信息</title>
+    <!-- <script type="text/javascript" src= "{{staticIP}}/js/include-web.js?id=1"></script>
+    <script type="text/javascript" src="{{staticIP}}/dist/ol/include-ol.js?id=1"></script> -->
+    <link href="https://iclient.supermap.io/web/libs/openlayers/7.5.2/ol.min.css" rel="stylesheet" />
+    <link href='https://iclient.supermap.io/dist/ol/iclient-ol.min.css' rel='stylesheet' />
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/openlayers/7.5.2/ol.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/dist/ol/iclient-ol.min.js"></script>
+    <!-- <script type="text/javascript" include="bootstrap,widgets.alert" src="/static/js/include-web.js"></script> -->
+   <script type="text/javascript" src="/static/locales/zh-CN/resources.js"></script>
+    <script type="text/javascript" src="/static/js/tokengenerator.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/i18next/i18next.min.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/jquery-i18next/jquery-i18next.min.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/css-vars-ponyfill/2.4.8/css-vars-ponyfill.min.js"></script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/compare-versions/5.0.3/index.min.js"></script> 
+    <script type="text/javascript" src="/static/js/utils.js"></script>
+    <script type="text/javascript" src="/static/js/localization.js"></script>
+    <script>Localization.initializeI18N('/static/', function () {Localization.localize();Localization.initGlobal();}); </script>
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://iclient.supermap.io/web/libs/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/widgets.js"></script>
+    <link rel="stylesheet" href="https://iclient.supermap.io/web/libs/openlayers/7.5.2/ol.min.css">
+    <script type="text/javascript" src="https://iclient.supermap.io/web/libs/openlayers/7.5.2/ol.js"></script>
+    <script type="text/javascript" src="/static/dist/ol/iclient-ol-es6.min.js"></script>
+    <link rel="stylesheet" href="/static/dist/ol/iclient-ol.min.css">
+    <script type="text/javascript" src="/static/js/Vue.js"></script>
+    <!-- <script type="text/javascript" src="/static/dist/ol/include-ol.js"></script> -->
+    <style>
+        #toolbar {
+          position: absolute;
+          top: 50px;
+          right: 10px;
+          text-align: center;
+          z-index: 1000;
+          border-radius: 4px;
+        }
+      </style>
+  </head>
+  <body style=" margin: 0;overflow: hidden;background: #fff;width: 100%;height:100%; position: absolute;top: 0;">
+  <div id="toolbar" class="panel panel-primary">
+    <div class='panel-heading'>
+        <!-- <h5 class='panel-title text-center' data-i18n="resources.title_queryByGeometry"></h5></div> -->
+        <h5 class='panel-title text-center'>数据信息</h5></div>
+    <div class='panel-body content'>
+        <input type="button" class="btn btn-default" data-i18n="[value]resources.btn_point" onclick="query('Point')"/>
+        <input type="button" class="btn btn-default" data-i18n="[value]resources.btn_line" onclick="query('LineString')"/>
+        <input type="button" class="btn btn-default" data-i18n="[value]resources.btn_rectangle" onclick="query('Circle')"/>
+        <input type="button" class="btn btn-default" data-i18n="[value]resources.btn_polygon" onclick="query('Polygon')"/>
+        <input type="button" class="btn btn-default" data-i18n="[value]resources.text_input_value_clear" onclick="clearFeatures()"/>
+    </div>
+    <div id="app">
+        <ul style="list-style-type: none; float: left;position: relative;text-align: left;">
+            <li>名称：</li>
+            <li>编号：</li>
+            <li>用户名：</li>
+            <li>类型：</li>
+            <li>预计产量：</li>
+            <li>实际产量：</li>
+            <li>面积：</li>
+
+        </ul>
+        <ul style="list-style-type: none; float: left;position: relative;text-align: left;">
+            <li class="name"></li>
+            <li class="smid"></li>
+            <li class="username"></li>
+            <li class="type"></li>
+            <li class="yjcl"></li>
+            <li class="sjcl"></li>
+            <li class="area"></li>
+        </ul>
+    </div>
+
+  </div>
+  <div id="map" style="width: 100%;height:100%"></div>
+    <div id="map" style="width: 100%; height: 100%"></div>
+    <script type="text/javascript">
+        //http://132.232.137.173:8090/iserver/services/map-BS_Data-2/rest/maps/bs2dmap%402dmap.ol3
+    //   var map,
+    //     url =
+    //       (window.isLocal ? window.server : 'https://iserver.supermap.io') +
+    //       '/iserver/services/map-world/rest/maps/World';
+    //     // 方式一：1.调用 ol.supermap.initMap，根据 SuperMap iServer 地图服务的地图信息，创建地图和底图
+    //     ol.supermap.initMap(url, {
+    //       mapOptions: {
+    //       // ol v7版本用法为ol.control.defaults.defaults； v6版本以下用法为ol.control.defaults
+    //       controls: ol.control.defaults.defaults({ attributionOptions: { collapsed: false } })
+    //           .extend([new ol.supermap.control.Logo({ link: "https://iclient.supermap.io" })])
+    //       }
+    //     });
+      /* 方式二：1.调用 ol.supermap.MapService，获取 SuperMap iServer 地图服务的地图信息
+                2.调用 ol.supermap.viewOptionsFromMapJSON 获取地图视图参数
+                3.调用 ol.Map 创建地图
+                4.调用 ol.layer.Tile 与 ol.source.TileSuperMapRest 创建底图
+       */
+        // var url = "http://132.232.137.173:8090/iserver/services/map-BS_Data-2/rest/maps/bs2dmap%402dmap.ol3";
+        // var url = "http://132.232.137.173:8090/iserver/services/map-BS_Data-2/arcgisrest.json"
+
+    //     var url = "http://132.232.137.173:8090/iserver/services/map-BS_Data-2/rest/maps/bs2dmap%402dmap"
+    //    new ol.supermap.MapService(url).getMapInfo(function (serviceResult) {
+    //       const mapObj = serviceResult.result;
+    //      const viewOptions = ol.supermap.viewOptionsFromMapJSON(mapObj);
+    //      console.log(mapObj)
+    //      console.log(viewOptions)
+    //       map = new ol.Map({
+    //         target: 'map',
+    //         // ol v7版本用法为ol.control.defaults.defaults； v6版本以下用法为ol.control.defaults
+    //         controls: ol.control.defaults.defaults({ attributionOptions: { collapsed: false } })
+    //           .extend([new ol.supermap.control.Logo({ link: "https://iclient.supermap.io" })]),
+    //         view: new ol.View(viewOptions)
+    //       });
+    //      var layer = new ol.layer.Tile({
+    //        source: new ol.source.TileSuperMapRest(ol.source.TileSuperMapRest.optionsFromMapJSON(url, mapObj, true)),
+    //         projection: 'EPSG:4326'
+    //       });
+    //       map.addLayer(layer);
+    //       map.addControl(new ol.supermap.control.ScaleLine());
+    //       // 处理鼠标点击事件
+    //         map.on('click', function (evt) {
+    //         var coordinate = evt.coordinate;
+    //         console.log(evt.coordinate)
+    //         var lonLat = evt.coordinate;
+    //         console.log('经度: ' + lonLat[0] + ', 纬度: ' + lonLat[1]);
+    //         });
+    //     });
+
+        
+    </script>
+
+<!-- <script type="text/javascript">
+    var resolutions = [];
+    var url = "http://132.232.137.173:8090/iserver/services/map-BS_Data-2/rest/maps/bs2dmap%402dmap";
+    for (var i = 0; i < 18; i++) {
+        resolutions.push(78271.5169640203125 * 2 / (Math.pow(2, i)));
+    }
+    new ol.supermap.MapService(url).getMapInfo(function (serviceResult) {
+        const mapObj = serviceResult.result;
+        const viewOptions = ol.supermap.viewOptionsFromMapJSON(mapObj);
+    var map = new ol.Map({
+        target: 'map',
+        // ol v7版本用法为ol.control.defaults.defaults； v6版本以下用法为ol.control.defaults
+        controls: ol.control.defaults.defaults({
+                attributionOptions: {
+                    collapsed: false
+                }
+            })
+            .extend([new ol.supermap.control.Logo({ link: "https://iclient.supermap.io" })]),
+        view: new ol.View({
+            // center: [25.1148516, 99.1607501],[24.8885797, 102.8207599]
+            // center:[102.8207599,24.8885797 ],//昆明
+            center:[99.1607501,25.1148516],//保山
+            zoom: 10,
+            projection: "EPSG:4326",
+            multiWorld: true
+        }),
+        layers: [
+            // new ol.layer.Tile({
+            //     source: new ol.source.Tianditu({
+            //         layerType: 'img',
+            //         key: "1d109683f4d84198e37a38c442d68311",
+            //         projection: "EPSG:4326"
+            //     })
+            // }), 
+            // new ol.layer.Tile({
+            //     source: new ol.source.Tianditu({
+            //         layerType: 'img',
+            //         isLabel: true,
+            //         key: "1d109683f4d84198e37a38c442d68311",
+            //         projection: "EPSG:4326"
+            //     })
+            // }),
+            new ol.layer.Tile({
+            source: new ol.source.TileSuperMapRest(ol.source.TileSuperMapRest.optionsFromMapJSON(url, mapObj, true)),
+                projection: 'EPSG:4326'
+            })
+    
+    ]
+    });
+
+    // 处理鼠标点击事件
+    map.on('click', function (evt) {
+      var coordinate = evt.coordinate;
+      console.log(evt.coordinate)
+      var lonLat = evt.coordinate;
+      console.log('经度: ' + lonLat[0] + ', 纬度: ' + lonLat[1]);
+    });
+});
+</script> -->
+
+<script type="text/javascript">
+//    var vue = new Vue({
+//         el: "#app",
+//         data: {
+//             message: "Hello Vue!",
+//             info:{
+//                 name:"1",
+//                 smid:"",
+//                 username:"",
+//                 type:"",
+//                 yjcl:"",
+//                 sjcl:""
+//             }
+
+//         }
+//     });
+        
+    var map, source, resultLayer, draw
+        // baseUrl = (window.isLocal ? window.server : "https://iserver.supermap.io")+"/iserver/services/map-world/rest/maps/World",
+        // url = (window.isLocal ? window.server : "https://iserver.supermap.io")+"/iserver/services/data-world/rest/data";
+        // var datasetNames = ["World:Countries"];
+
+
+        // var url = "http://132.232.137.173:8090/iserver/services/map-BS_Data-2/rest/maps/bs2dmap%402dmap"
+        baseUrl = (window.isLocal ? window.server : "http://132.232.137.173:8090")+"/iserver/services/map-BS_Data-2/rest/maps/bs2dmap%402dmap",
+        url = (window.isLocal ? window.server : "http://132.232.137.173:8090")+"/iserver/services/data-BS_Data-2/rest/data";
+        var datasetNames = ["BS_YanYe_grid:YanYe_grid"];
+
+    map = new ol.Map({
+        target: 'map',
+        // ol v7版本用法为ol.control.defaults.defaults； v6版本以下用法为ol.control.defaults
+        controls: ol.control.defaults.defaults({attributionOptions: {collapsed: false}})
+            .extend([new ol.supermap.control.Logo({ link: "https://iclient.supermap.io" })]),
+        view: new ol.View({
+            center: [541780.8573306589, 2778027.984108349],
+            // center: [0, 0],
+            zoom:16,
+            projection: 'EPSG:3857',
+            // projection: 'EPSG:4326',
+            multiWorld: true
+        })
+    });
+    var layer = new ol.layer.Tile({
+        source: new ol.source.TileSuperMapRest({
+            url: baseUrl
+        }),
+        projection: 'EPSG:3857'
+        // projection: 'EPSG:4326'
+    });
+    source = new ol.source.Vector();
+    var vectorLayer = new ol.layer.Vector({
+        source: source
+    });
+    map.addLayer(layer);
+    map.addLayer(vectorLayer);
+
+    function query(type) {
+        clearFeatures();
+        draw = new ol.interaction.Draw({
+          source: source,
+          type: type,
+          geometryFunction: type ==='Circle' && ol.interaction.Draw.createBox()
+        });
+        map.addInteraction(draw);
+        draw.on('drawend', drawCompleted);
+    }
+
+    function drawCompleted(e) {
+        clearFeatures()
+        geo = e.feature.getGeometry();
+        var geometryParam = new ol.supermap.GetFeaturesByGeometryParameters({
+            // datasetNames: ["World:Countries"],
+            datasetNames: datasetNames,
+            geometry: geo,
+            spatialQueryMode: "INTERSECT"
+        });
+        new ol.supermap.FeatureService(url).getFeaturesByGeometry(geometryParam).then(function (serviceResult) {
+            console.log(serviceResult.result.features.features[0].properties)
+            var info = serviceResult.result.features.features[0].properties;
+            $(".name").html(info.NAME)
+            $(".username").html(info.USERNAME)
+            $(".type").html(info.TYPE)
+            $(".smid").html(info.SMID)
+            $(".yjcl").html(100)
+            $(".sjcl").html(80)
+            $(".area").html(info.SMAREA)
+            var vectorSource = new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(serviceResult.result.features),
+                wrapX: false
+            });
+            resultLayer = new ol.layer.Vector({
+                source: vectorSource,
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'red',
+                        width: 2
+                    }),
+                    fill: new ol.style.Fill({
+                        color: 'rgba(0, 0, 255, 0.1)'
+                    })
+                })
+            });
+            map.addLayer(resultLayer);
+        });
+    }
+
+    function clearFeatures() { 
+      draw && map.removeInteraction(draw);
+      if(resultLayer){
+        map.removeLayer(resultLayer);
+      }
+      if(source){
+        source.clear();
+      }
+    }
+
+    // 处理鼠标点击事件
+    map.on('click', function (evt) {
+      var coordinate = evt.coordinate;
+      console.log(map)
+      console.log(evt.coordinate)
+      var lonLat = evt.coordinate;
+      console.log('经度: ' + lonLat[0] + ', 纬度: ' + lonLat[1]);
+      query("Point")
+
+    });
+</script>
+  </body>
+</html>
