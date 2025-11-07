@@ -3,10 +3,10 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from app.helper.QLY_api import *
 from config import qlyConfig
 
-qly = Blueprint('qly', __name__)
+qly = Blueprint('qly', __name__,url_prefix='/qlyApi')
 _qlyClient = QLYClient(base_address=qlyConfig.BASE_ADDRESS, appid=qlyConfig.APPID, secret=qlyConfig.SECRET, rsa_private_key=qlyConfig.RSA_PRIVATE_KEY)
 
-@qly.route('/qlyApi/v3/open/api/token', methods=['POST'])
+@qly.route('/v3/open/api/token', methods=['POST'])
 def token():
     """获取Token"""
     data = request.get_json()
@@ -25,7 +25,7 @@ def token():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@qly.route('/qlyApi/v3/open/api/device/list', methods=['POST'])
+@qly.route('/v3/open/api/device/list', methods=['POST'])
 def device_list():
     """分页获取项目下设备列表"""
     data = request.get_json()
@@ -44,7 +44,7 @@ def device_list():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@qly.route('/qlyApi/v3/open/api/node/tree', methods=['POST'])
+@qly.route('/v3/open/api/node/tree', methods=['POST'])
 def node_tree():
     """获取组织机构及子节点设备列表"""
     data = request.get_json()
@@ -66,7 +66,7 @@ def node_tree():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@qly.route('/qlyApi/v3/open/api/device/info', methods=['POST'])
+@qly.route('/v3/open/api/device/info', methods=['POST'])
 def device_info():
     """获取设备详细信息"""
     data = request.get_json()
@@ -83,7 +83,7 @@ def device_info():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@qly.route('/qlyApi/v3/open/api/store/device/detail/list', methods=['POST'])
+@qly.route('/v3/open/api/store/device/detail/list', methods=['POST'])
 def store_device_detail_list():
     """模糊搜索节点和设备详细信息"""
     data = request.get_json()
@@ -104,7 +104,7 @@ def store_device_detail_list():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@qly.route('/qlyApi/v3/open/api/websdk/player', methods=['POST'])
+@qly.route('/v3/open/api/websdk/player', methods=['POST'])
 def websdk_player():
     """获取摄像机视频播放WebSDK链接"""
     data = request.get_json()
@@ -121,7 +121,7 @@ def websdk_player():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@qly.route('/qlyAPi/v3/open/api/websdk/live', methods=['POST'])
+@qly.route('/v3/open/api/websdk/live', methods=['POST'])
 def websdk_live():
     """获取纯视频播放WebSDK链接（多屏播放）"""
     data = request.get_json()
@@ -138,7 +138,7 @@ def websdk_live():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@qly.route('/qlyApi/v3/open/api/websdk/playback', methods=['POST'])
+@qly.route('/v3/open/api/websdk/playback', methods=['POST'])
 def websdk_playback():
     """获取指定时间段回看WebSDK链接"""
     data = request.get_json()

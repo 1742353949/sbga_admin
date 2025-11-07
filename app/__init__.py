@@ -22,4 +22,10 @@ def create_app():
     app.register_blueprint(main)
     app.register_blueprint(auth)
     app.register_blueprint(qly)
+
+    # 管理后台
+    from app.routes.Admin.AdminRoute import admin
+    app.register_blueprint(admin)
+
+
     return app
