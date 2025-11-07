@@ -18,6 +18,8 @@ def create_app():
     # db.init_app(app)
     from app.routes.main import main
     from app.routes.auth import auth
+    from app.routes.qly import qly
     app.register_blueprint(main)
     app.register_blueprint(auth)
+    app.register_blueprint(qly)
     return app

@@ -2,7 +2,7 @@
 #### 项目根目录创建虚拟环境venv
 python -m venv venv
 #### 激活虚拟环境
-venv/bin/activate
+venv/Scripts/activate
 
 #### 项目依赖:写入/更新
 pip freeze > requirements.txt
