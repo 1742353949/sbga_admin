@@ -81,6 +81,7 @@ class MySQLHelper:
             blocking=True,
             ping=0
         )
+        self.database = database
 
     def get_connection(self):
         return self.pool.connection()
@@ -109,7 +110,7 @@ class MySQLHelper:
         finally:
             conn.close()
 
-    def get_table_columns_and_comments(self):
+    def get_table_columns_and_comments(self,tableName):
         """查询表字段和注释"""
         try:
             query = """
@@ -126,7 +127,7 @@ class MySQLHelper:
             conn = self.get_connection()
             try:
                 with conn.cursor() as cursor:
-                    cursor.execute(query, (self.database, self._tbname))
+                    cursor.execute(query, (self.database, tableName))
                     return cursor.fetchall()
             finally:
                 conn.close()
