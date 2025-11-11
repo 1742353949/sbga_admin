@@ -121,3 +121,11 @@ body {
 </script>
 </body>
 </html>
+<script type="text/javascript">
+  $(".nav-item").click(function(){
+      $(".nav-item").removeClass("active");
+      $(this).addClass("active");
+      $(this).toggleClass("open");
+      // $(".nav-item").removeClass("open");
+  })
+</script>

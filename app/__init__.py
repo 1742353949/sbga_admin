@@ -15,6 +15,11 @@ def create_app():
     CORS(app)
     #导入配置文件
     app.config.from_object(config)
+
+    #公共帮助路由
+    from app.routes.Common.HelperRoute import help
+    app.register_blueprint(help)
+
     # db.init_app(app)
     from app.routes.main import main
     from app.routes.auth import auth
