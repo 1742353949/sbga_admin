@@ -11,6 +11,23 @@ admin = Blueprint('admin', __name__,url_prefix='/admin')
 #定义控制器
 c_admin = AdminController()
 
+@admin.route('/Demo/<path:url>', methods=['GET','POST'])
+def demo(url):
+    ishtml = url.find('.html')
+    if ishtml != -1:
+        return render_template('Demo/'+url)
+    else:
+        #js css 访问
+        from flask import send_from_directory
+        import os
+        static_dir = os.path.join(os.getcwd(), 'app\static')
+        print(static_dir)
+        return send_from_directory(static_dir, url)
+        
+@admin.route('', methods=['GET','POST'])
+def main():
+    return c_admin.index()
+
 @admin.route('/index', methods=['GET','POST'])
 def index():
     return c_admin.index()

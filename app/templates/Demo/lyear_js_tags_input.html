@@ -28,6 +28,7 @@
       <div class="lyear-layout-sidebar-scroll">
         
         <nav class="sidebar-main">
+
           <ul class="nav nav-drawer">
             <li class="nav-item"> <a href="index.html"><i class="mdi mdi-home"></i> 后台首页</a> </li>
             <li class="nav-item nav-item-has-subnav">
@@ -295,3 +296,11 @@
 <script type="text/javascript" src="js/main.min.js"></script>
 </body>
 </html>
+<script type="text/javascript">
+  $(".nav-item").click(function(){
+      $(".nav-item").removeClass("active");
+      $(this).addClass("active");
+      $(this).toggleClass("open");
+      // $(".nav-item").removeClass("open");
+  })
+</script>

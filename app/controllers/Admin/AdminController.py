@@ -8,7 +8,7 @@ class AdminController():
         super().__init__()
     
     def index(self):
-        return render_template('Admin/index.html')
+        return render_template('Admin/main.html')
     
     def login(self):
         username = get_param_by_str('username')
