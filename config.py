@@ -4,7 +4,7 @@ import os
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY') or 'some string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    LOCAL_DB = False
+    LOCAL_DB = True
 
     @staticmethod
     def init_app(app):
@@ -26,9 +26,9 @@ class ProductionConfig(Config):
 class MysqlConfig(Config):
     if Config.LOCAL_DB:
         CHARSET = 'utf8'
-        USER = 'kmlskj'
-        PASSWORD = 'kmlskj@123'
-        DB = "kmlskj_bs_data"
+        USER = 'jin'
+        PASSWORD = 'Jin2025!'
+        DB = "wd_data"
         HOST = "127.0.0.1"
         PORT = 3306
     else:

@@ -19,9 +19,11 @@ def create_app():
     from app.routes.main import main
     from app.routes.auth import auth
     from app.routes.qly import qly
+    from app.routes.sbga_routes import Sbga
     app.register_blueprint(main)
     app.register_blueprint(auth)
     app.register_blueprint(qly)
+    app.register_blueprint(Sbga)
 
     # 管理后台
     from app.routes.Admin.AdminRoute import admin
