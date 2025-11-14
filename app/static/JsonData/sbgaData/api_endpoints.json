@@ -1,0 +1,63 @@
+[
+    {
+        "id": 1,
+        "name": "get查询ybss中总人数",
+        "method": "GET",
+        "url": "http://127.0.0.1:5004/ry/query",
+        "params": [
+            {
+                "key": "action",
+                "value": "list"
+            }
+        ],
+        "headers": [
+            {
+                "key": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "bodyType": "none",
+        "rawType": "application/json",
+        "body": "",
+        "folderId": "2"
+    },
+    {
+        "id": 2,
+        "name": "post查询ybss中总人数",
+        "method": "POST",
+        "url": "http://127.0.0.1:5004/ry/query",
+        "params": [
+            {
+                "key": "action",
+                "value": "all"
+            }
+        ],
+        "headers": [
+            {
+                "key": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "bodyType": "raw",
+        "rawType": "application/json",
+        "body": "{\n    \"action\":\"all\"\n}",
+        "folderId": "2"
+    },
+    {
+        "id": 3,
+        "name": "helloworld",
+        "method": "GET",
+        "url": "http://127.0.0.1:5004/",
+        "params": [],
+        "headers": [
+            {
+                "key": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "bodyType": "none",
+        "rawType": "application/json",
+        "body": "",
+        "folderId": "1"
+    }
+]

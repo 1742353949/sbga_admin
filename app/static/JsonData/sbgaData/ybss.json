@@ -1,0 +1,229 @@
+{
+    "name": "一标三实",
+    "objName": "ybss",
+    "data": {
+        "sjgl": {
+            "name": "数据概览",
+            "objName": "sjgl",
+            "data": {
+                "bzdzzs": {
+                    "name": "标准地址总数",
+                    "objName": "bzdzzs",
+                    "value": "7540个"
+                },
+                "sydwzs": {
+                    "name": "实有单位总数",
+                    "objName": "sydwzs",
+                    "value": "8452家"
+                },
+                "syfwzs": {
+                    "name": "实有房屋总数",
+                    "objName": "syfwzs",
+                    "value": "182个"
+                },
+                "syrkzs": {
+                    "name": "实有人口总数",
+                    "objName": "syrkzs",
+                    "value": "13966个"
+                }
+            }
+        },
+        "sydwgl": {
+            "name": "实有单位概览",
+            "objName": "sydwgl",
+            "data": {
+                "gtgsh": {
+                    "name": "个体工商户",
+                    "objName": "gtgsh",
+                    "value": "7234家"
+                },
+                "qt": {
+                    "name": "其他",
+                    "objName": "qt",
+                    "value": "1020家"
+                },
+                "qydw": {
+                    "name": "企业单位",
+                    "objName": "qydw",
+                    "value": "51家"
+                },
+                "shtt": {
+                    "name": "社会团体",
+                    "objName": "shtt",
+                    "value": "12家"
+                },
+                "shydw": {
+                    "name": "事业单位",
+                    "objName": "shydw",
+                    "value": "1020家"
+                },
+                "sydw": {
+                    "name": "实有单位",
+                    "objName": "sydw",
+                    "value": "7234家"
+                }
+            }
+        },
+        "syfwgl": {
+            "name": "实有房屋概览",
+            "objName": "syfwgl",
+            "data": {
+                "fzhuz": {
+                    "name": "非住宅",
+                    "objName": "fzhuz",
+                    "value": "161个"
+                },
+                "syfw": {
+                    "name": "实有房屋",
+                    "objName": "syfw",
+                    "value": "9488个",
+                    "户数": "13966个",
+                    "楼栋数": "7542个"
+                },
+                "zhz": {
+                    "name": "住宅",
+                    "objName": "zhz",
+                    "value": "9327个"
+                }
+            }
+        },
+        "syrkgl": {
+            "name": "实有人口概览",
+            "objName": "syrkgl",
+            "data": {
+                "nanxrkzs": {
+                    "name": "男性人口总数",
+                    "objName": "nxrkzs",
+                    "value": "13966人"
+                },
+                "nxrkzs": {
+                    "name": "女性人口总数",
+                    "objName": "nxrkzs",
+                    "value": "8452人"
+                },
+                "syrks": {
+                    "name": "实有人口总数",
+                    "objName": "syrks",
+                    "value": "7542人"
+                }
+            }
+        },
+        "syrkglxs": {
+            "name": "实有人口各类型数",
+            "objName": "syrkglxs",
+            "data": {
+                "hjr": {
+                    "name": "户籍人",
+                    "objName": "hjr",
+                    "value": "300人"
+                },
+                "ldr": {
+                    "name": "流动人",
+                    "objName": "ldr",
+                    "value": "400人"
+                },
+                "wsr": {
+                    "name": "外省人",
+                    "objName": "wsr",
+                    "value": "200人"
+                }
+            }
+        },
+        "syrkzdxl": {
+            "name": "实有人口重点系类分布",
+            "objName": "syrkzdxl",
+            "data": {
+                "fzqk": {
+                    "name": "犯罪前科",
+                    "objName": "fzqk",
+                    "value": "400"
+                },
+                "mdjf": {
+                    "name": "矛盾纠纷",
+                    "objName": "mdjf",
+                    "value": "200"
+                },
+                "ptry": {
+                    "name": "普通人员",
+                    "objName": "ptry",
+                    "value": "200"
+                },
+                "shry": {
+                    "name": "涉黄人员",
+                    "objName": "shry",
+                    "value": "300"
+                },
+                "zdry": {
+                    "name": "重点人员",
+                    "objName": "zdry",
+                    "value": "400"
+                },
+                "zjry": {
+                    "name": "宗教人员",
+                    "objName": "zjry",
+                    "value": "300"
+                }
+            }
+        },
+        "xzlb": {
+            "name": "乡镇列表",
+            "objName": "xzlb",
+            "data": {
+                "table": {
+                    "name": "乡镇数据表",
+                    "objName": "table",
+                    "data": [
+                        {
+                            "hushu": "3000",
+                            "ldsl": "1000",
+                            "name": "妥甸镇",
+                            "objName": "tdz"
+                        },
+                        {
+                            "hushu": "2400",
+                            "ldsl": "800",
+                            "name": "大庄镇",
+                            "objName": "dzz"
+                        },
+                        {
+                            "hushu": "1800",
+                            "ldsl": "600",
+                            "name": "法脿镇",
+                            "objName": "fbz"
+                        },
+                        {
+                            "hushu": "2250",
+                            "ldsl": "750",
+                            "name": "鄂嘉镇",
+                            "objName": "ejz"
+                        },
+                        {
+                            "hushu": "2700",
+                            "ldsl": "900",
+                            "name": "大麦地镇",
+                            "objName": "dmdz"
+                        },
+                        {
+                            "hushu": "2700",
+                            "ldsl": "900",
+                            "name": "安龙堡乡",
+                            "objName": "albx"
+                        },
+                        {
+                            "hushu": "2700",
+                            "ldsl": "900",
+                            "name": "爱尼山乡",
+                            "objName": "ansx"
+                        },
+                        {
+                            "hushu": "1700",
+                            "ldsl": "800",
+                            "name": "独田乡",
+                            "objName": "dtx"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

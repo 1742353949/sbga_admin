@@ -1,0 +1,134 @@
+{
+    "name": "乡镇分布",
+    "objName": "xzfb",
+    "data": {
+        "tdz": {
+            "name": "妥甸镇",
+            "objName": "tdz",
+            "data": {
+                "ldsl": {
+                    "name": "楼栋数量",
+                    "objName": "ldsl",
+                    "value": "1000"
+                },
+                "hushu": {
+                    "name": "户数",
+                    "objName": "hushu",
+                    "value": "3000"
+                }
+            }
+        },
+        "dzz": {
+            "name": "大庄镇",
+            "objName": "dzz",
+            "data": {
+                "ldsl": {
+                    "name": "楼栋数量",
+                    "objName": "ldsl",
+                    "value": "800"
+                },
+                "hushu": {
+                    "name": "户数",
+                    "objName": "hushu",
+                    "value": "2400"
+                }
+            }
+        },
+        "fbz": {
+            "name": "法脿镇",
+            "objName": "fbz",
+            "data": {
+                "ldsl": {
+                    "name": "楼栋数量",
+                    "objName": "ldsl",
+                    "value": "600"
+                },
+                "hushu": {
+                    "name": "户数",
+                    "objName": "hushu",
+                    "value": "1800"
+                }
+            }
+        },
+        "ejz": {
+            "name": "鄂嘉镇",
+            "objName": "ejz",
+            "data": {
+                "ldsl": {
+                    "name": "楼栋数量",
+                    "objName": "ldsl",
+                    "value": "750"
+                },
+                "hushu": {
+                    "name": "户数",
+                    "objName": "hushu",
+                    "value": "2250"
+                }
+            }
+        },
+        "dmdz": {
+            "name": "大麦地镇",
+            "objName": "dmdz",
+            "data": {
+                "ldsl": {
+                    "name": "楼栋数量",
+                    "objName": "ldsl",
+                    "value": "900"
+                },
+                "hushu": {
+                    "name": "户数",
+                    "objName": "hushu",
+                    "value": "2700"
+                }
+            }
+        },
+        "albx": {
+            "name": "安龙堡乡",
+            "objName": "albx",
+            "data": {
+                "ldsl": {
+                    "name": "楼栋数量",
+                    "objName": "ldsl",
+                    "value": "900"
+                },
+                "hushu": {
+                    "name": "户数",
+                    "objName": "hushu",
+                    "value": "2700"
+                }
+            }
+        },
+        "ansx": {
+            "name": "爱尼山乡",
+            "objName": "ansx",
+            "data": {
+                "ldsl": {
+                    "name": "楼栋数量",
+                    "objName": "ldsl",
+                    "value": "900"
+                },
+                "hushu": {
+                    "name": "户数",
+                    "objName": "hushu",
+                    "value": "2700"
+                }
+            }
+        },
+        "dtx": {
+            "name": "独田乡",
+            "objName": "dtx",
+            "data": {
+                "ldsl": {
+                    "name": "楼栋数量",
+                    "objName": "ldsl",
+                    "value": "800"
+                },
+                "hushu": {
+                    "name": "户数",
+                    "objName": "hushu",
+                    "value": "1700"
+                }
+            }
+        }
+    }
+}
