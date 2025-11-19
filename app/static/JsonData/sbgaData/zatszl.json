@@ -1,0 +1,258 @@
+{
+    "name": "治安态势总览",
+    "objName": "zatszl",
+    "data": {
+        "zdgpdbaj": {
+            "name": "重点挂牌督办案件",
+            "objName": "zdgpdbaj",
+            "data": [
+                {
+                    "name": "案件名称",
+                    "objName": "ajmc",
+                    "value": "xx入室盗窃",
+                    "fbdw": "xx派出所",
+                    "fbrq": "2025年11月1日"
+                },
+               {
+                    "name": "案件名称",
+                    "objName": "ajmc1",
+                    "value": "xx入室盗窃",
+                    "fbdw": "xx派出所",
+                    "fbrq": "2025年11月1日"
+                },
+                {
+                    "name": "案件名称",
+                    "objName": "ajmc2",
+                    "value": "xx入室盗窃",
+                    "fbdw": "xx派出所",
+                    "fbrq": "2025年11月1日"
+                },
+                 {
+                    "name": "案件名称",
+                    "objName": "ajmc3",
+                    "value": "xx入室盗窃",
+                    "fbdw": "xx派出所",
+                    "fbrq": "2025年11月1日"
+                },
+                 {
+                    "name": "案件名称",
+                    "objName": "ajmc4",
+                    "value": "xx入室盗窃",
+                    "fbdw": "xx派出所",
+                    "fbrq": "2025年11月1日"
+                },
+                 {
+                    "name": "案件名称",
+                    "objName": "ajmc5",
+                    "value": "xx入室盗窃",
+                    "fbdw": "xx派出所",
+                    "fbrq": "2025年11月1日"
+                },
+                 {
+                    "name": "案件名称",
+                    "objName": "ajmc6",
+                    "value": "xx入室盗窃",
+                    "fbdw": "xx派出所",
+                    "fbrq": "2025年11月1日"
+                },
+                 {
+                    "name": "案件名称",
+                    "objName": "ajmc7",
+                    "value": "xx入室盗窃",
+                    "fbdw": "xx派出所",
+                    "fbrq": "2025年11月1日"
+                },
+                 {
+                    "name": "案件名称",
+                    "objName": "ajmc8",
+                    "value": "xx入室盗窃",
+                    "fbdw": "xx派出所",
+                    "fbrq": "2025年11月1日"
+                }
+            ]
+        },
+        "ajzbs": {
+            "name": "案件占比数",
+            "objName": "ajzbs",
+            "data": {
+                "ajzb": {
+                    "name": "案件占比数",
+                    "objName": "ajzbs",
+                    "value": "15632个"
+                },
+                "msaj": {
+                    "name": "民事案件",
+                    "objName": "msaj",
+                    "value": "7542个"
+                },
+                "xsaj": {
+                    "name": "刑事案件",
+                    "objName": "xsaj",
+                    "value": "8452个"
+                },
+                "qtaj": {
+                    "name": "其他案件",
+                    "objName": "qtaj",
+                    "value": "182个"
+                }
+            }
+        },
+        "24xsajfslzst": {
+            "name": "24小时案件发生量走势图",
+            "objName": "24xsajfslzst",
+            "data": {
+                "sj": {
+                    "name": "8点",                    
+                    "value": "8:00",
+                    "dxzp": "100",
+                    "wlzp": "200",
+                    "tfsj": "300"
+                },
+                "sj1": {
+                    "name": "12点",                    
+                    "value": "12:00",
+                    "dxzp": "100",
+                    "wlzp": "100",
+                    "tfsj": "100"
+                },
+                 "sj2": {
+                    "name": "16点",                  
+                    "value": "16:00",
+                    "dxzp": "100",
+                    "wlzp": "100",
+                    "tfsj": "100"
+                },
+                 "sj3": {
+                    "name": "20点",                   
+                    "value": "20:00",
+                    "dxzp": "100",
+                    "wlzp": "100",
+                    "tfsj": "100"
+                },
+                 "sj4": {
+                    "name": "24点",                  
+                    "value": "24:00",
+                    "dxzp": "100",
+                    "wlzp": "100",
+                    "tfsj": "100"
+                },
+                 "sj5": {
+                    "name": "4点",                    
+                    "value": "4:00",
+                    "dxzp": "100",
+                    "wlzp": "100",
+                    "tfsj": "100"
+                }
+            }
+        },
+        "zdcs": {
+            "name": "重点场所",
+            "objName": "zdcs",
+            "data": {
+                "zs":{"name": "总数",
+                    "objName": "zs",
+                    "value": "7524个"
+                },
+                "zbl": {
+                    "name": "政保类",
+                    "objName": "zbl",
+                    "value": "574",
+                    "rate": "63.0%"
+                },
+                "zal": {
+                    "name": "治安类",
+                    "objName": "zal",
+                    "value": "374",
+                    "rate": "52.0%"
+                },
+                "jdl": {
+                    "name": "禁毒类",
+                    "objName": "zdl",
+                    "value": "250",
+                    "rate": "43.0%"
+                },
+                "syhzl": {
+                    "name": "食药环侦类",
+                    "objName": "syhzl",
+                    "value": "400",
+                    "rate": "13.0%"
+                },
+                "jzl": {
+                    "name": "经侦类",
+                    "objName": "jzl",
+                    "value": "400",
+                    "rate": "50.0%"
+                },
+                "wal": {
+                    "name": "网安类",
+                    "objName": "wal",
+                    "value": "400",
+                    "rate": "50.0%"
+                },
+                "jtgll": {
+                    "name": "交通管理类",
+                    "objName": "jtgll",
+                    "value": "400",
+                    "rate": "50.0%"
+                },
+                "qt": {
+                    "name": "其他",
+                    "objName": "qt",
+                    "value": "74",
+                    "rate": "13.0%"
+                }
+            }
+        },
+        "zdry": {
+            "name": "重点人员",
+            "objName": "zdry",                     
+            "data": {
+                "zs":{"name": "总数",
+                    "objName": "zs",
+                    "value": "4000人"
+                },
+                "mdjf": {
+                    "name": "矛盾纠纷",
+                    "objName": "mdjf",
+                    "value": "128849"
+                },
+                "fzqk": {
+                    "name": "犯罪前科",
+                    "objName": "fzqk",
+                    "value": "110025"
+                },
+                "sxry": {
+                    "name": "失信人员",
+                    "objName": "sxry",
+                    "value": "100578"
+                },
+                "zjry": {
+                    "name": "宗教人员",
+                    "objName": "zjry",
+                    "value": "95205"
+                },
+                "qt": {
+                    "name": "其他",
+                    "objName": "qt",
+                    "value": "50000"
+                }
+            }
+        },
+        "xbtj": {
+            "name": "性别统计",
+            "objName": "xbtj",
+            "data": {
+                "nanx": {
+                    "name": "男性",
+                    "objName": "nanx",
+                    "value": "7234"
+                },
+                "nvx": {
+                    "name": "女性",
+                    "objName": "nvx",
+                    "value": "7234"
+                }
+            }
+        }
+    }
+}

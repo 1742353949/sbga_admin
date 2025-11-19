@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API管理与测试工具</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            height: 100vh;
+            overflow-y: auto;
+            background-color: #fff;
+            border-right: 1px solid #dee2e6;
+        }
+        .main-content {
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .api-item, .folder-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .api-item:hover, .folder-item:hover {
+            background-color: #e9ecef;
+        }
+        .api-item.active, .folder-item.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .request-panel, .response-panel {
+            height: 40vh;
+            overflow-y: auto;
+        }
+        .nav-tabs .nav-link {
+            cursor: pointer;
+        }
+        .kv-row {
+            display: flex;
+            margin-bottom: 5px;
+            gap: 5px;
+        }
+        .kv-row input {
+            flex: 1;
+        }
+        .btn-add {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        .btn-remove {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        .method-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-get {
+            background-color: #17a2b8;
+        }
+        .badge-post {
+            background-color: #28a745;
+        }
+        .folder-children {
+            padding-left: 20px;
+        }
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .folder-name {
+            flex-grow: 1;
+        }
+        .folder-actions {
+            display: none;
+        }
+        .folder-item:hover .folder-actions {
+            display: block;
+        }
+        .folder-select {
+            max-width: 200px;
+        }
+        .add-subfolder {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 左侧边栏 - API列表 -->
+            <div class="col-md-3 sidebar">
+                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                    <h5 class="mb-0">API接口列表</h5>
+                    <div>
+                        <button class="btn btn-primary btn-sm me-1" id="addFolderBtn">文件夹</button>
+                        <button class="btn btn-primary btn-sm" id="addApiBtn">+</button>
+                    </div>
+                </div>
+                <div class="p-2">
+                    <input type="text" class="form-control form-control-sm mb-2" placeholder="搜索接口..." id="searchApi">
+                </div>
+                <div id="apiList">
+                    <!-- API列表将通过JS动态填充 -->
+                </div>
+            </div>
+            
+            <!-- 主内容区域 -->
+            <div class="col-md-9 main-content">
+                <!-- API详情和测试面板 -->
+                <div id="apiDetailPanel">
+                    <div class="p-3 border-bottom">
+                        <h4>API接口详情</h4>
+                    </div>
+                    
+                    <div class="p-3">
+                        <!-- 基本信息 -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <select class="form-select" id="methodSelect">
+                                            <option value="GET">GET</option>
+                                            <option value="POST">POST</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" id="urlInput" placeholder="请输入API地址，如：https://api.example.com/users">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-success w-100" id="sendRequestBtn">发送</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <input type="text" class="form-control" id="nameInput" placeholder="接口名称（可选）">
+                                    <div class="mt-2">
+                                        <label class="form-label">选择文件夹</label>
+                                        <select class="form-select folder-select" id="folderSelect">
+                                            <option value="">未分类</option>
+                                            <!-- 文件夹选项将通过JS动态填充 -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 请求配置 -->
+                        <ul class="nav nav-tabs" id="requestTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="params-tab" data-bs-toggle="tab" data-bs-target="#params" type="button" role="tab">Params</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="headers-tab" data-bs-toggle="tab" data-bs-target="#headers" type="button" role="tab">Headers</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="body-tab" data-bs-toggle="tab" data-bs-target="#body" type="button" role="tab">Body</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content border border-top-0 p-3 mb-3">
+                            <!-- Params Tab -->
+                            <div class="tab-pane fade show active" id="params" role="tabpanel">
+                                <div id="paramsContainer">
+                                    <!-- Params项将通过JS动态添加 -->
+                                </div>
+                                <button class="btn btn-add mt-2" id="addParamBtn">+ 添加参数</button>
+                            </div>
+                            
+                            <!-- Headers Tab -->
+                            <div class="tab-pane fade" id="headers" role="tabpanel">
+                                <div id="headersContainer">
+                                    <!-- Headers项将通过JS动态添加 -->
+                                </div>
+                                <button class="btn btn-add mt-2" id="addHeaderBtn">+ 添加Header</button>
+                            </div>
+                            
+                            <!-- Body Tab -->
+                            <div class="tab-pane fade" id="body" role="tabpanel">
+                                <select class="form-select mb-2" id="bodyTypeSelect">
+                                    <option value="none">无</option>
+                                    <option value="raw">Raw</option>
+                                </select>
+                                <div id="bodyRawContainer" style="display:none;">
+                                    <select class="form-select mb-2" id="rawTypeSelect">
+                                        <option value="text/plain">Text</option>
+                                        <option value="application/json" selected>JSON</option>
+                                        <option value="application/xml">XML</option>
+                                    </select>
+                                    <textarea class="form-control" id="bodyTextarea" rows="8" placeholder="请求体内容"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 操作按钮 -->
+                        <div class="mb-3">
+                            <button class="btn btn-primary" id="saveApiBtn">保存接口</button>
+                            <button class="btn btn-secondary" id="resetApiBtn">重置</button>
+                            <button class="btn btn-danger" id="deleteApiBtn" style="display:none;">删除接口</button>
+                        </div>
+                        
+                        <!-- 响应面板 -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">响应结果</h6>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="response-panel" id="responsePanel">
+                                    <div class="p-3 text-muted">
+                                        发送请求后，响应内容将在此处显示
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 文件夹详情面板 -->
+                <div id="folderDetailPanel" style="display:none;">
+                    <div class="p-3 border-bottom">
+                        <h4>文件夹详情</h4>
+                    </div>
+                    
+                    <div class="p-3">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">文件夹名称</label>
+                                    <input type="text" class="form-control" id="folderNameInput" placeholder="请输入文件夹名称">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">描述（可选）</label>
+                                    <textarea class="form-control" id="folderDescInput" rows="3" placeholder="请输入文件夹描述"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <button class="btn btn-primary" id="saveFolderBtn">保存文件夹</button>
+                            <button class="btn btn-secondary" id="resetFolderBtn">重置</button>
+                            <button class="btn btn-danger" id="deleteFolderBtn" style="display:none;">删除文件夹</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 全局变量
+        let apiList = [];
+        let folderList = [];
+        let currentApi = null;
+        let currentFolder = null;
+        let nextId = 1;
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadApiList();
+            loadFolderList();
+            bindEvents();
+            addParamRow();
+            addHeaderRow();
+        });
+
+        // 绑定事件
+        function bindEvents() {
+            document.getElementById('addApiBtn').addEventListener('click', addNewApi);
+            document.getElementById('addFolderBtn').addEventListener('click', addNewFolder);
+            document.getElementById('addParamBtn').addEventListener('click', addParamRow);
+            document.getElementById('addHeaderBtn').addEventListener('click', addHeaderRow);
+            document.getElementById('sendRequestBtn').addEventListener('click', sendRequest);
+            document.getElementById('saveApiBtn').addEventListener('click', saveApi);
+            document.getElementById('saveFolderBtn').addEventListener('click', saveFolder);
+            document.getElementById('resetApiBtn').addEventListener('click', resetApiForm);
+            document.getElementById('resetFolderBtn').addEventListener('click', resetFolderForm);
+            document.getElementById('deleteApiBtn').addEventListener('click', deleteApi);
+            document.getElementById('deleteFolderBtn').addEventListener('click', deleteFolder);
+            document.getElementById('bodyTypeSelect').addEventListener('change', toggleBodyRaw);
+            document.getElementById('searchApi').addEventListener('input', filterApiList);
+        }
+
+        // 切换Body Raw显示
+        function toggleBodyRaw() {
+            const bodyType = document.getElementById('bodyTypeSelect').value;
+            const rawContainer = document.getElementById('bodyRawContainer');
+            rawContainer.style.display = bodyType === 'raw' ? 'block' : 'none';
+        }
+
+        // 添加参数行
+        function addParamRow(key = '', value = '') {
+            const container = document.getElementById('paramsContainer');
+            const row = document.createElement('div');
+            row.className = 'kv-row';
+            row.innerHTML = `
+                <input type="text" class="form-control form-control-sm param-key" placeholder="参数名" value="${key}">
+                <input type="text" class="form-control form-control-sm param-value" placeholder="参数值" value="${value}">
+                <button class="btn-remove" onclick="this.parentElement.remove()">-</button>
+            `;
+            container.appendChild(row);
+        }
+
+        // 添加Header行
+        function addHeaderRow(key = '', value = '') {
+            const container = document.getElementById('headersContainer');
+            const row = document.createElement('div');
+            row.className = 'kv-row';
+            row.innerHTML = `
+                <input type="text" class="form-control form-control-sm header-key" placeholder="Header名" value="${key}">
+                <input type="text" class="form-control form-control-sm header-value" placeholder="Header值" value="${value}">
+                <button class="btn-remove" onclick="this.parentElement.remove()">-</button>
+            `;
+            container.appendChild(row);
+        }
+
+        // 获取参数列表
+        function getParams() {
+            const params = [];
+            document.querySelectorAll('#paramsContainer .kv-row').forEach(row => {
+                const keyInput = row.querySelector('.param-key');
+                const valueInput = row.querySelector('.param-value');
+                if (keyInput && valueInput && keyInput.value) {
+                    params.push({
+                        key: keyInput.value,
+                        value: valueInput.value
+                    });
+                }
+            });
+            return params;
+        }
+
+        // 获取Headers列表
+        function getHeaders() {
+            const headers = [];
+            document.querySelectorAll('#headersContainer .kv-row').forEach(row => {
+                const keyInput = row.querySelector('.header-key');
+                const valueInput = row.querySelector('.header-value');
+                if (keyInput && valueInput && keyInput.value) {
+                    headers.push({
+                        key: keyInput.value,
+                        value: valueInput.value
+                    });
+                }
+            });
+            return headers;
+        }
+
+        // 加载API列表
+        function loadApiList() {
+            fetch('/api/api-list')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        apiList = data.data;
+                        renderApiList();
+                        if (apiList.length > 0 && !currentFolder) {
+                            loadApiDetail(apiList[0]);
+                        } else {
+                            resetApiForm();
+                        }
+                    } else {
+                        alert('加载API列表失败: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('加载API列表出错:', error);
+                    alert('加载API列表出错: ' + error.message);
+                });
+        }
+
+        // 加载文件夹列表
+        function loadFolderList() {
+            fetch('/api/folder-list')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        folderList = data.data;
+                        renderFolderSelect();
+                        renderApiList();
+                    } else {
+                        alert('加载文件夹列表失败: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('加载文件夹列表出错:', error);
+                    alert('加载文件夹列表出错: ' + error.message);
+                });
+        }
+
+        // 渲染文件夹选择下拉框
+        function renderFolderSelect() {
+            const select = document.getElementById('folderSelect');
+            // 保留第一个选项"未分类"
+            select.innerHTML = '<option value="">未分类</option>';
+            
+            // 构建文件夹树结构
+            function buildFolderTree(folders, parentId = null) {
+                return folders
+                    .filter(folder => (parentId ? folder.parentId == parentId : !folder.parentId))
+                    .map(folder => {
+                        const children = buildFolderTree(folders, folder.id);
+                        return { ...folder, children };
+                    });
+            }
+            
+            // 渲染文件夹选项
+            function renderFolderOptions(folderTree, level = 0) {
+                folderTree.forEach(folder => {
+                    const indent = '\u00A0'.repeat(level * 4); // 使用不间断空格
+                    const option = document.createElement('option');
+                    option.value = folder.id;
+                    option.textContent = `${indent}📁 ${folder.name}`;
+                    select.appendChild(option);
+                    
+                    // 渲染子文件夹选项
+                    if (folder.children && folder.children.length > 0) {
+                        renderFolderOptions(folder.children, level + 1);
+                    }
+                });
+            }
+            
+            // 构建并渲染文件夹选项
+            const folderTree = buildFolderTree(folderList);
+            renderFolderOptions(folderTree);
+        }
+
+        // 渲染API列表
+        function renderApiList(filter = '') {
+            const container = document.getElementById('apiList');
+            container.innerHTML = '';
+            
+            // 构建文件夹树结构
+            function buildFolderTree(folders, parentId = null) {
+                return folders
+                    .filter(folder => (parentId ? folder.parentId == parentId : !folder.parentId))
+                    .map(folder => {
+                        const children = buildFolderTree(folders, folder.id);
+                        return { ...folder, children };
+                    });
+            }
+            
+            // 渲染文件夹树
+            function renderFolderTree(folderTree, level = 0) {
+                folderTree.forEach(folder => {
+                    const folderItem = document.createElement('div');
+                    folderItem.className = 'folder-item';
+                    if (currentFolder && currentFolder.id === folder.id) {
+                        folderItem.classList.add('active');
+                    }
+                    
+                    const indent = '&nbsp;'.repeat(level * 4);
+                    
+                    folderItem.innerHTML = `
+                        <div class="folder-header">
+                            <div class="folder-name">${indent}📁 ${folder.name}</div>
+                            <div class="folder-actions">
+                                <button class="btn btn-sm btn-outline-primary add-subfolder" data-id="${folder.id}">子文件夹</button>
+                                <button class="btn btn-sm btn-outline-primary edit-folder" data-id="${folder.id}">编辑</button>
+                            </div>
+                        </div>
+                        <div class="small text-muted mt-1">${folder.description || ''}</div>
+                    `;
+                    
+                    folderItem.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('edit-folder') && !e.target.classList.contains('add-subfolder')) {
+                            loadFolderDetail(folder);
+                        }
+                    });
+                    
+                    // 绑定编辑按钮事件
+                    folderItem.querySelector('.edit-folder').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        loadFolderDetail(folder);
+                    });
+                    
+                    // 绑定添加子文件夹按钮事件
+                    folderItem.querySelector('.add-subfolder').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        addNewSubFolder(folder.id);
+                    });
+                    
+                    container.appendChild(folderItem);
+                    
+                    // 渲染该文件夹下的API
+                    const folderApis = apiList.filter(api => api.folderId == folder.id);
+                    if (folderApis.length > 0) {
+                        const childrenContainer = document.createElement('div');
+                        childrenContainer.className = 'folder-children';
+                        
+                        folderApis.forEach(api => {
+                            if (!filter || api.name.toLowerCase().includes(filter.toLowerCase()) || 
+                                api.url.toLowerCase().includes(filter.toLowerCase())) {
+                                const apiItem = document.createElement('div');
+                                apiItem.className = 'api-item';
+                                if (currentApi && currentApi.id === api.id) {
+                                    apiItem.classList.add('active');
+                                }
+                                
+                                const methodClass = api.method === 'POST' ? 'badge-post' : 'badge-get';
+                                
+                                const apiIndent = '&nbsp;'.repeat((level + 1) * 4);
+                                
+                                apiItem.innerHTML = `
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="method-badge ${methodClass}">${api.method}</span>
+                                        <span class="flex-grow-1 ms-2">${apiIndent}${api.name || '未命名接口'}</span>
+                                    </div>
+                                    <div class="small text-muted mt-1 text-truncate">${apiIndent}${api.url}</div>
+                                `;
+                                
+                                apiItem.addEventListener('click', () => loadApiDetail(api));
+                                childrenContainer.appendChild(apiItem);
+                            }
+                        });
+                        
+                        if (childrenContainer.children.length > 0) {
+                            container.appendChild(childrenContainer);
+                        }
+                    }
+                    
+                    // 渲染子文件夹
+                    if (folder.children && folder.children.length > 0) {
+                        renderFolderTree(folder.children, level + 1);
+                    }
+                });
+            }
+            
+            // 构建并渲染文件夹树
+            const folderTree = buildFolderTree(folderList);
+            renderFolderTree(folderTree);
+            
+            // 渲染未分类的API
+            const ungroupedApis = apiList.filter(api => !api.folderId || 
+                !folderList.some(folder => folder.id == api.folderId));
+            
+            if (ungroupedApis.length > 0) {
+                const ungroupedTitle = document.createElement('div');
+                ungroupedTitle.className = 'px-3 py-2 fw-bold border-bottom';
+                ungroupedTitle.textContent = '未分类';
+                container.appendChild(ungroupedTitle);
+                
+                ungroupedApis.forEach(api => {
+                    if (!filter || api.name.toLowerCase().includes(filter.toLowerCase()) || 
+                        api.url.toLowerCase().includes(filter.toLowerCase())) {
+                        const apiItem = document.createElement('div');
+                        apiItem.className = 'api-item';
+                        if (currentApi && currentApi.id === api.id) {
+                            apiItem.classList.add('active');
+                        }
+                        
+                        const methodClass = api.method === 'POST' ? 'badge-post' : 'badge-get';
+                        
+                        apiItem.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="method-badge ${methodClass}">${api.method}</span>
+                                <span class="flex-grow-1 ms-2">${api.name || '未命名接口'}</span>
+                            </div>
+                            <div class="small text-muted mt-1 text-truncate">${api.url}</div>
+                        `;
+                        
+                        apiItem.addEventListener('click', () => loadApiDetail(api));
+                        container.appendChild(apiItem);
+                    }
+                });
+            }
+        }
+
+        // 过滤API列表
+        function filterApiList() {
+            const filter = document.getElementById('searchApi').value;
+            renderApiList(filter);
+        }
+
+        // 加载API详情
+        function loadApiDetail(api) {
+            // 显示API详情面板
+            document.getElementById('apiDetailPanel').style.display = 'block';
+            document.getElementById('folderDetailPanel').style.display = 'none';
+            
+            currentApi = {...api};
+            currentFolder = null;
+            
+            document.getElementById('methodSelect').value = api.method || 'GET';
+            document.getElementById('urlInput').value = api.url || '';
+            document.getElementById('nameInput').value = api.name || '';
+            document.getElementById('folderSelect').value = api.folderId || '';
+            
+            // 清空并重新填充参数
+            const paramsContainer = document.getElementById('paramsContainer');
+            paramsContainer.innerHTML = '';
+            if (api.params && api.params.length > 0) {
+                api.params.forEach(param => {
+                    addParamRow(param.key, param.value);
+                });
+            } else {
+                addParamRow();
+            }
+            
+            // 清空并重新填充Headers
+            const headersContainer = document.getElementById('headersContainer');
+            headersContainer.innerHTML = '';
+            if (api.headers && api.headers.length > 0) {
+                api.headers.forEach(header => {
+                    addHeaderRow(header.key, header.value);
+                });
+            } else {
+                addHeaderRow();
+            }
+            
+            // 设置Body
+            document.getElementById('bodyTypeSelect').value = api.bodyType || 'none';
+            document.getElementById('rawTypeSelect').value = api.rawType || 'application/json';
+            document.getElementById('bodyTextarea').value = api.body || '';
+            toggleBodyRaw();
+            
+            // 显示删除按钮
+            document.getElementById('deleteApiBtn').style.display = 'inline-block';
+            document.getElementById('deleteFolderBtn').style.display = 'none';
+            
+            // 更新选中状态
+            renderApiList(document.getElementById('searchApi').value);
+        }
+
+        // 加载文件夹详情
+        function loadFolderDetail(folder) {
+            // 显示文件夹详情面板
+            document.getElementById('apiDetailPanel').style.display = 'none';
+            document.getElementById('folderDetailPanel').style.display = 'block';
+            
+            currentFolder = {...folder};
+            currentApi = null;
+            
+            document.getElementById('folderNameInput').value = folder.name || '';
+            document.getElementById('folderDescInput').value = folder.description || '';
+            
+            // 显示删除按钮
+            document.getElementById('deleteFolderBtn').style.display = 'inline-block';
+            document.getElementById('deleteApiBtn').style.display = 'none';
+            
+            // 更新选中状态
+            renderApiList(document.getElementById('searchApi').value);
+        }
+
+        // 添加新API
+        function addNewApi() {
+            // 显示API详情面板
+            document.getElementById('apiDetailPanel').style.display = 'block';
+            document.getElementById('folderDetailPanel').style.display = 'none';
+            
+            const newApi = {
+                id: Date.now(), // 使用时间戳作为临时ID
+                name: '',
+                method: 'GET',
+                url: '',
+                params: [],
+                headers: [
+                    {key: 'Content-Type', value: 'application/json'}
+                ],
+                bodyType: 'none',
+                rawType: 'application/json',
+                body: ''
+            };
+            
+            // 如果当前在文件夹详情中，将新API默认分配到该文件夹
+            if (currentFolder) {
+                newApi.folderId = currentFolder.id;
+            }
+            
+            currentApi = newApi;
+            currentFolder = null;
+            loadApiDetail(newApi);
+        }
+
+        // 添加新文件夹
+        function addNewFolder() {
+            // 显示文件夹详情面板
+            document.getElementById('apiDetailPanel').style.display = 'none';
+            document.getElementById('folderDetailPanel').style.display = 'block';
+            
+            const newFolder = {
+                id: Date.now(), // 使用时间戳作为临时ID
+                name: '',
+                description: '',
+                parentId: null  // 根级别的文件夹
+            };
+            
+            currentFolder = newFolder;
+            currentApi = null;
+            loadFolderDetail(newFolder);
+        }
+
+        // 添加新的子文件夹
+        function addNewSubFolder(parentId) {
+            // 显示文件夹详情面板
+            document.getElementById('apiDetailPanel').style.display = 'none';
+            document.getElementById('folderDetailPanel').style.display = 'block';
+            
+            const newFolder = {
+                id: Date.now(), // 使用时间戳作为临时ID
+                name: '',
+                description: '',
+                parentId: parentId  // 设置父文件夹ID
+            };
+            
+            currentFolder = newFolder;
+            currentApi = null;
+            loadFolderDetail(newFolder);
+        }
+
+        // 重置API表单
+        function resetApiForm() {
+            currentApi = null;
+            currentFolder = null;
+            
+            document.getElementById('methodSelect').value = 'GET';
+            document.getElementById('urlInput').value = '';
+            document.getElementById('nameInput').value = '';
+            document.getElementById('folderSelect').value = '';
+            
+            // 清空并重新添加默认参数行
+            const paramsContainer = document.getElementById('paramsContainer');
+            paramsContainer.innerHTML = '';
+            addParamRow();
+            
+            // 清空并重新添加默认Headers行
+            const headersContainer = document.getElementById('headersContainer');
+            headersContainer.innerHTML = '';
+            addHeaderRow('Content-Type', 'application/json');
+            
+            // 重置Body
+            document.getElementById('bodyTypeSelect').value = 'none';
+            document.getElementById('rawTypeSelect').value = 'application/json';
+            document.getElementById('bodyTextarea').value = '';
+            toggleBodyRaw();
+            
+            // 隐藏删除按钮
+            document.getElementById('deleteApiBtn').style.display = 'none';
+            document.getElementById('deleteFolderBtn').style.display = 'none';
+            
+            // 显示API详情面板
+            document.getElementById('apiDetailPanel').style.display = 'block';
+            document.getElementById('folderDetailPanel').style.display = 'none';
+            
+            // 更新选中状态
+            renderApiList(document.getElementById('searchApi').value);
+        }
+
+        // 重置文件夹表单
+        function resetFolderForm() {
+            currentFolder = null;
+            currentApi = null;
+            
+            document.getElementById('folderNameInput').value = '';
+            document.getElementById('folderDescInput').value = '';
+            
+            // 隐藏删除按钮
+            document.getElementById('deleteFolderBtn').style.display = 'none';
+            document.getElementById('deleteApiBtn').style.display = 'none';
+            
+            // 显示API详情面板
+            document.getElementById('apiDetailPanel').style.display = 'block';
+            document.getElementById('folderDetailPanel').style.display = 'none';
+            
+            // 更新选中状态
+            renderApiList(document.getElementById('searchApi').value);
+        }
+
+        // 保存API
+        function saveApi() {
+            const apiData = {
+                id: currentApi ? currentApi.id : Date.now(),
+                name: document.getElementById('nameInput').value,
+                method: document.getElementById('methodSelect').value,
+                url: document.getElementById('urlInput').value,
+                params: getParams(),
+                headers: getHeaders(),
+                bodyType: document.getElementById('bodyTypeSelect').value,
+                rawType: document.getElementById('rawTypeSelect').value,
+                body: document.getElementById('bodyTextarea').value,
+                folderId: document.getElementById('folderSelect').value || null
+            };
+            
+            if (!apiData.url) {
+                alert('请输入API地址');
+                return;
+            }
+            
+            // 如果是新API或者ID是临时的，则添加；否则更新
+            const isNewApi = !currentApi || !apiList.some(api => api.id === apiData.id && typeof api.id === 'number');
+            
+            const url = isNewApi ? '/api/add-api' : '/api/update-api';
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(apiData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('保存成功');
+                    if (data.data) {
+                        currentApi = data.data;
+                    }
+                    loadApiList(); // 重新加载列表
+                } else {
+                    alert('保存失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('保存出错:', error);
+                alert('保存出错: ' + error.message);
+            });
+        }
+
+        // 保存文件夹
+        function saveFolder() {
+            const folderData = {
+                id: currentFolder ? currentFolder.id : Date.now(),
+                name: document.getElementById('folderNameInput').value,
+                description: document.getElementById('folderDescInput').value,
+                parentId: currentFolder && currentFolder.parentId !== undefined ? currentFolder.parentId : null
+            };
+            
+            if (!folderData.name) {
+                alert('请输入文件夹名称');
+                return;
+            }
+            
+            // 如果是新文件夹或者ID是临时的，则添加；否则更新
+            const isNewFolder = !currentFolder || !folderList.some(folder => folder.id === folderData.id && typeof folder.id === 'number');
+            
+            const url = isNewFolder ? '/api/add-folder' : '/api/update-folder';
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(folderData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('保存成功');
+                    loadFolderList(); // 重新加载文件夹列表
+                } else {
+                    alert('保存失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('保存出错:', error);
+                alert('保存出错: ' + error.message);
+            });
+        }
+
+        // 删除API
+        function deleteApi() {
+            if (!currentApi || !currentApi.id) {
+                alert('没有选中要删除的API');
+                return;
+            }
+            
+            if (!confirm('确定要删除这个API吗？')) {
+                return;
+            }
+            
+            fetch('/api/delete-api', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({id: currentApi.id})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('删除成功');
+                    loadApiList(); // 重新加载列表
+                    resetApiForm(); // 重置表单
+                } else {
+                    alert('删除失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('删除出错:', error);
+                alert('删除出错: ' + error.message);
+            });
+        }
+
+        // 删除文件夹
+        function deleteFolder() {
+            if (!currentFolder || !currentFolder.id) {
+                alert('没有选中要删除的文件夹');
+                return;
+            }
+            
+            // 获取要删除的文件夹及其所有子文件夹的ID
+            function getAllChildFolderIds(parentId) {
+                const childIds = [];
+                folderList.forEach(folder => {
+                    if (folder.parentId == parentId) {
+                        childIds.push(folder.id);
+                        childIds.push(...getAllChildFolderIds(folder.id));
+                    }
+                });
+                return childIds;
+            }
+            
+            const allDeleteIds = [currentFolder.id, ...getAllChildFolderIds(currentFolder.id)];
+            const folderNames = folderList
+                .filter(folder => allDeleteIds.includes(folder.id))
+                .map(folder => folder.name)
+                .join(', ');
+            
+            if (!confirm(`确定要删除文件夹 "${currentFolder.name}" 及其所有子文件夹(${folderNames})吗？这些文件夹下的API也将被删除。`)) {
+                return;
+            }
+            
+            // 删除所有相关文件夹下的API
+            function deleteApisAndFolders(deleteIds) {
+                if (deleteIds.length === 0) {
+                    // 所有API已删除，现在删除文件夹
+                    fetch('/api/delete-folder', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({id: currentFolder.id})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('删除成功');
+                            loadFolderList(); // 重新加载文件夹列表
+                            loadApiList(); // 重新加载API列表
+                            resetFolderForm(); // 重置表单
+                        } else {
+                            alert('删除失败: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('删除文件夹出错:', error);
+                        alert('删除文件夹出错: ' + error.message);
+                    });
+                    return;
+                }
+                
+                const folderId = deleteIds[0];
+                fetch('/api/delete-api-by-folder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({folder_id: folderId})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 继续删除下一个文件夹下的API
+                        deleteApisAndFolders(deleteIds.slice(1));
+                    } else {
+                        alert('删除API失败: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('删除API出错:', error);
+                    alert('删除API出错: ' + error.message);
+                });
+            }
+            
+            // 开始删除过程
+            deleteApisAndFolders(allDeleteIds);
+        }
+
+        // 发送请求
+        function sendRequest() {
+            const requestData = {
+                method: document.getElementById('methodSelect').value,
+                url: document.getElementById('urlInput').value,
+                headers: getHeaders(),
+                params: getParams(),
+                body: document.getElementById('bodyTextarea').value
+            };
+            
+            if (!requestData.url) {
+                alert('请输入API地址');
+                return;
+            }
+            
+            const responsePanel = document.getElementById('responsePanel');
+            responsePanel.innerHTML = '<div class="p-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div> 请求中...</div>';
+            
+            fetch('/api/test-api', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 尝试解析JSON响应内容以便更好地格式化显示
+                    let formattedContent = data.data.content;
+                    try {
+                        const parsedContent = JSON.parse(data.data.content);
+                        formattedContent = JSON.stringify(parsedContent, null, 2);
+                    } catch (e) {
+                        // 如果不是JSON格式，保持原样
+                    }
+                    
+                    const responseHtml = `
+                        <div class="p-3">
+                            <div class="mb-3">
+                                <h6>响应状态: <span class="badge bg-primary">${data.data.status_code}</span></h6>
+                            </div>
+                            <div class="mb-3">
+                                <h6>响应内容:</h6>
+                                <pre class="bg-light p-3 rounded">${escapeHtml(formattedContent)}</pre>
+                            </div>
+                        </div>
+                    `;
+                    responsePanel.innerHTML = responseHtml;
+                } else {
+                    responsePanel.innerHTML = `<div class="p-3 text-danger">请求失败: ${escapeHtml(data.message)}</div>`;
+                }
+            })
+            .catch(error => {
+                responsePanel.innerHTML = `<div class="p-3 text-danger">请求出错: ${escapeHtml(error.message)}</div>`;
+            });
+        }
+
+        // HTML转义
+        function escapeHtml(text) {
+            // 如果是字符串且包含Unicode转义序列，则先解码
+            if (typeof text === 'string') {
+                try {
+                    // 尝试解码Unicode序列
+                    text = text.replace(/\\u[\dA-F]{4}/gi, function (match) {
+                        return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
+                    });
+                } catch (e) {
+                    // 如果解码失败，保持原始文本
+                }
+            }
+            
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>

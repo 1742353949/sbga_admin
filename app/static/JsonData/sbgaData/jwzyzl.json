@@ -1,0 +1,278 @@
+{
+    "name": "警务资源",
+    "objName": "jwzy",
+    "data": {
+        "jltf": {
+            "name": "警力投放",
+            "objName": "jltf",
+            "data": {
+                "table": {
+                    "name": "柱状图",
+                    "objName": "table",
+                    "data": [
+                        {
+                            "name": "妥甸镇",
+                            "value": "200"
+                        },
+                        {
+                            "name": "大庄镇",
+                            "value": "300"
+                        },
+                        {
+                            "name": "法脿镇",
+                            "value": "400"
+                        },
+                        {
+                            "name": "鄂嘉镇",
+                            "value": "300"
+                        },
+                        {
+                            "name": "大麦地镇",
+                            "value": "400"
+                        },
+                        {
+                            "name": "安龙堡乡",
+                            "value": "200"
+                        },
+                        {
+                            "name": "爱尼山乡",
+                            "value": "600"
+                        },
+                        {
+                            "name": "独田乡",
+                            "value": "100"
+                        }
+                    ]
+                }
+            }
+        },
+        "jlzy": {
+            "name": "警力资源",
+            "objName": "jlzy",
+            "data": {
+                "fj": {
+                    "name": "辅警",
+                    "objName": "fj",
+                    "data": {
+                        "zb": {
+                            "name": "占比",
+                            "objName": "zb",
+                            "value": "40%"
+                        },
+                        "zhqs": {
+                            "name": "执勤数",
+                            "objName": "zhqs",
+                            "value": "40人"
+                        }
+                    },
+                    "value": "100人"
+                },
+                "mj": {
+                    "name": "民警",
+                    "objName": "mj",
+                    "data": {
+                        "zb": {
+                            "name": "占比",
+                            "objName": "zb",
+                            "value": "10%"
+                        },
+                        "zhqs": {
+                            "name": "执勤数",
+                            "objName": "zhqs",
+                            "value": "12人"
+                        }
+                    },
+                    "value": "120人"
+                },
+                "qt": {
+                    "name": "其他",
+                    "objName": "qt",
+                    "data": {
+                        "zb": {
+                            "name": "占比",
+                            "objName": "zb",
+                            "value": "20%"
+                        },
+                        "zhqs": {
+                            "name": "执勤数",
+                            "objName": "zhqs",
+                            "value": "10人"
+                        }
+                    },
+                    "value": "50人"
+                },
+                "tj": {
+                    "name": "特警",
+                    "objName": "tj",
+                    "data": {
+                        "zb": {
+                            "name": "占比",
+                            "objName": "zb",
+                            "value": "20%"
+                        },
+                        "zhqs": {
+                            "name": "执勤数",
+                            "objName": "zhqs",
+                            "value": "10人"
+                        }
+                    },
+                    "value": "50人"
+                }
+            }
+        },
+        "jwjj": {
+            "name": "警务接警数量占比",
+            "objName": "jwjjslzb",
+            "data": {
+                "0": {
+                    "name": "交通",
+                    "objName": "jt",
+                    "rate": "63%",
+                    "value": "574"
+                },
+                "1": {
+                    "name": "刑事",
+                    "objName": "xs",
+                    "rate": "52%",
+                    "value": "374"
+                },
+                "2": {
+                    "name": "劳改",
+                    "objName": "lg",
+                    "rate": "43%",
+                    "value": "250"
+                },
+                "3": {
+                    "name": "劳教",
+                    "objName": "lj",
+                    "rate": "13%",
+                    "value": "74"
+                },
+                "4": {
+                    "name": "其他",
+                    "objName": "qt",
+                    "rate": "50%",
+                    "value": "400"
+                }
+            }
+        },
+        "xxzy": {
+            "name": "信息资源",
+            "objName": "xxzy",
+            "data": {
+                "czrk": {
+                    "name": "常住人口",
+                    "objName": "czrk",
+                    "value": "7234"
+                },
+                "kddjl": {
+                    "name": "可调动警力",
+                    "objName": "kddjl",
+                    "rate": "12",
+                    "value": "51"
+                },
+                "wlry": {
+                    "name": "外来人员",
+                    "objName": "wlry",
+                    "value": "7234"
+                },
+                "yhry": {
+                    "name": "医护人员",
+                    "objName": "yhry",
+                    "rate": "1020",
+                    "value": "3"
+                },
+                "zbjl": {
+                    "name": "周边警力",
+                    "objName": "zbjl",
+                    "rate": "12",
+                    "value": "51"
+                },
+                "zbyy": {
+                    "name": "周边医院",
+                    "objName": "zbyy",
+                    "rate": "1020",
+                    "value": "3"
+                }
+            }
+        },
+        "zbzy": {
+            "name": "装备资源",
+            "objName": "zbzy",
+            "data": {
+                "fhzb": {
+                    "name": "防护装备",
+                    "objName": "fhzb",
+                    "value": "174"
+                },
+                "jjck": {
+                    "name": "警局仓库",
+                    "objName": "jjck",
+                    "value": "100"
+                },
+                "jwzd": {
+                    "name": "警务终端",
+                    "objName": "jwzd",
+                    "value": "174"
+                },
+                "jyqx": {
+                    "name": "警用器械",
+                    "objName": "jyqx",
+                    "value": "100"
+                },
+                "qt": {
+                    "name": "其他",
+                    "objName": "qt",
+                    "value": "174"
+                }
+            }
+        },
+        "znzbzy": {
+            "name": "智能装备资源",
+            "objName": "znzbzy",
+            "data": {
+                "wrj": {
+                    "name": "无人机",
+                    "objName": "wrj",
+                    "data": {
+                        "gz": {
+                            "name": "故障",
+                            "objName": "gz",
+                            "value": "1"
+                        },
+                        "lx": {
+                            "name": "离线",
+                            "objName": "lx",
+                            "value": "19"
+                        },
+                        "zx": {
+                            "name": "在线",
+                            "objName": "zx",
+                            "value": "20"
+                        }
+                    },
+                    "value": "50"
+                },
+                "znjk": {
+                    "name": "智能监控",
+                    "objName": "znjk",
+                    "data": {
+                        "gz": {
+                            "name": "故障",
+                            "value": "1"
+                        },
+                        "lx": {
+                            "name": "离线",
+                            "value": "20"
+                        },
+                        "zx": {
+                            "name": "在线",
+                            "value": "280"
+                        }
+                    },
+                    "value": "300"
+                }
+            }
+        }
+    }
+}

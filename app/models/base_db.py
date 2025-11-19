@@ -111,27 +111,46 @@ class MySQLHelper:
         finally:
             conn.close()
 
-    def get_table_columns_and_comments(self,tableName):
+    def get_table_columns_and_comments(self, tableName):
         """查询表字段和注释"""
+        print(f"开始查询表字段和注释，表名: {tableName}")
         try:
-            query = """
-            SELECT 
-                COLUMN_NAME, 
-                COLUMN_COMMENT
-            FROM 
-                information_schema.columns
-            WHERE 
-                TABLE_SCHEMA = %s 
-                AND TABLE_NAME = %s;
-            """
-            # 使用 get_connection 方法获取连接
+            # 先获取当前连接的数据库名称
             conn = self.get_connection()
             try:
                 with conn.cursor() as cursor:
-                    cursor.execute(query, (self.database, tableName))
-                    return cursor.fetchall()
+                    # 查询当前数据库名称
+                    cursor.execute("SELECT DATABASE() as db_name")
+                    db_result = cursor.fetchone()
+                    current_db = db_result['db_name'] if db_result else None
+                    print(f"当前数据库名称: {current_db}")
+                    
+                    query = """
+                    SELECT 
+                        COLUMN_NAME, 
+                        COLUMN_COMMENT
+                    FROM 
+                        information_schema.columns
+                    WHERE 
+                        TABLE_SCHEMA = %s 
+                        AND TABLE_NAME = %s;
+                    """
+                    print(f"执行查询: {query}")
+                    print(f"查询参数: database={current_db}, tableName={tableName}")
+                    
+                    cursor.execute(query, (current_db, tableName))
+                    result = cursor.fetchall()
+                    print(f"查询结果: {result}")
+                    # 确保返回的是列表而不是None
+                    final_result = result if result is not None else []
+                    print(f"最终返回结果: {final_result}")
+                    return final_result
             finally:
                 conn.close()
+                print("数据库连接已关闭")
         except Exception as e:
             print(f"获取字段信息失败: {e}")
-            return None  
+            import traceback
+            traceback.print_exc()
+            # 确保在出现异常时返回空列表而不是None
+            return []

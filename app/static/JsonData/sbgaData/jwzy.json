@@ -2,53 +2,275 @@
     "name": "警务资源",
     "objName": "jwzy",
     "data": {
-        "xyr":{
-            "name": "抓获嫌疑人数及挽回经济损失",
-            "objName": "xyr",
+        "ajfslzst": {
+            "name": "24小时案件发生量走势图",
+            "objName": "ajfslzst",
             "data": {
-                "zbxyr":{
-                    "name": "抓获嫌疑人",
-                    "objName": "zbxyr",
-                    "value": "99人"
+                "dxzp": {
+                    "name": "电信诈骗",
+                    "objName": "dxzp",
+                    "value": "574"
                 },
-                "whjjss":{
-                    "name": "挽回经济损失",
-                    "objName": "whjjss",
-                    "value": "20万元"
+                "tssj": {
+                    "name": "突发事件",
+                    "objName": "tssj",
+                    "value": "574"
+                },
+                "wlzp": {
+                    "name": "网络诈骗",
+                    "objName": "wlzp",
+                    "value": "574"
                 }
             }
         },
-        "jwjj":{
+        "ajzb": {
+            "name": "案件占比",
+            "objName": "ajzb",
+            "data": {
+                "msaj": {
+                    "name": "民事案件",
+                    "objName": "msaj",
+                    "value": "574"
+                },
+                "qtaj": {
+                    "name": "其他案件",
+                    "objName": "qtaj",
+                    "value": "174"
+                },
+                "xsaj": {
+                    "name": "刑事案件",
+                    "objName": "xsaj",
+                    "value": "374"
+                },
+                "table": {
+                    "name": "柱状图",
+                    "objName": "table",
+                    "data": [
+                        {
+                            "name": "一月",
+                            "data": {
+                                "msaj": {
+                                    "name": "民事案件",
+                                    "objName": "msaj",
+                                    "value": "1035"
+                                },
+                                "qtaj": {
+                                    "name": "其他案件",
+                                    "objName": "qtaj",
+                                    "value": "263"
+                                },
+                                "xsaj": {
+                                    "name": "刑事案件",
+                                    "objName": "xsaj",
+                                    "value": "3025"
+                                }
+                            }
+                        },
+                        {
+                            "name": "二月",
+                            "data": {
+                                "msaj": {
+                                    "name": "民事案件",
+                                    "objName": "msaj",
+                                    "value": "1036"
+                                },
+                                "qtaj": {
+                                    "name": "其他案件",
+                                    "objName": "qtaj",
+                                    "value": "263"
+                                },
+                                "xsaj": {
+                                    "name": "刑事案件",
+                                    "objName": "xsaj",
+                                    "value": "3025"
+                                }
+                            }
+                        },
+                        {
+                            "name": "三月",
+                            "data": {
+                                "msaj": {
+                                    "name": "民事案件",
+                                    "objName": "msaj",
+                                    "value": "1036"
+                                },
+                                "qtaj": {
+                                    "name": "其他案件",
+                                    "objName": "qtaj",
+                                    "value": "263"
+                                },
+                                "xsaj": {
+                                    "name": "刑事案件",
+                                    "objName": "xsaj",
+                                    "value": "3025"
+                                }
+                            }
+                        },
+                        {
+                            "name": "四月",
+                            "data": {
+                                "msaj": {
+                                    "name": "民事案件",
+                                    "objName": "msaj",
+                                    "value": "1036"
+                                },
+                                "qtaj": {
+                                    "name": "其他案件",
+                                    "objName": "qtaj",
+                                    "value": "263"
+                                },
+                                "xsaj": {
+                                    "name": "刑事案件",
+                                    "objName": "xsaj",
+                                    "value": "3025"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "jltf": {
+            "name": "警力投放",
+            "objName": "jltf",
+            "data": {
+                "xxpcs1": {
+                    "name": "xx派出所",
+                    "objName": "xxpcs",
+                    "value": "574"
+                },
+                "xxpcs2": {
+                    "name": "xx派出所",
+                    "objName": "xxpcs",
+                    "value": "574"
+                },
+                "xxpcs3": {
+                    "name": "xx派出所",
+                    "objName": "xxpcs",
+                    "value": "574"
+                }
+            }
+        },
+        "jwjj": {
             "name": "警务接警数量占比",
             "objName": "jwjjslzb",
             "data": {
-                "jt":{
+                "jt": {
                     "name": "交通",
                     "objName": "jt",
-                    "value": "574",
-                    "rate":"63%"
+                    "rate": "63%",
+                    "value": "574"
                 },
-                "xs":{
-                    "name": "刑事",
-                    "objName": "xs",
-                    "value": "374",
-                    "rate":"52%"
-                },
-                "lg":{
+                "lg": {
                     "name": "劳改",
                     "objName": "lg",
-                    "value": "274",
-                    "rate":"43%"
+                    "rate": "43%",
+                    "value": "274"
                 },
-                "lj":{
+                "lj": {
                     "name": "劳教",
                     "objName": "lj",
-                    "value": "174",
-                    "rate":"23%"
+                    "rate": "23%",
+                    "value": "174"
+                },
+                "xs": {
+                    "name": "刑事",
+                    "objName": "xs",
+                    "rate": "52%",
+                    "value": "374"
+                }
+            }
+        },
+        "jwyxgk": {
+            "name": "勤务运行概况",
+            "objName": "jwyxgk",
+            "data": {
+                "ejjw": {
+                    "name": "二级警务",
+                    "objName": "ejjw",
+                    "value": "263I"
+                },
+                "sjjw": {
+                    "name": "三级警务",
+                    "objName": "sjjw",
+                    "value": "1036"
+                },
+                "table": {
+                    "name": "折线图",
+                    "objName": "table",
+                    "data": [
+                        {
+                            "name": "一月",
+                            "value": "3025"
+                        },
+                        {
+                            "name": "二月",
+                            "value": "263"
+                        },
+                        {
+                            "name": "三月",
+                            "value": "1036"
+                        },
+                        {
+                            "name": "四月",
+                            "value": "3025"
+                        },
+                        {
+                            "name": "五月",
+                            "value": "263"
+                        },
+                        {
+                            "name": "六月",
+                            "value": "1036"
+                        },
+                        {
+                            "name": "七月",
+                            "value": "3025"
+                        },
+                        {
+                            "name": "八月",
+                            "value": "263"
+                        },
+                        {
+                            "name": "九月",
+                            "value": "1036"
+                        },
+                        {
+                            "name": "十月",
+                            "value": "3025"
+                        },
+                        {
+                            "name": "十一月",
+                            "value": "263"
+                        },
+                        {
+                            "name": "十二月",
+                            "value": "1036"
+                        }
+                    ]
+                },
+                "yjjw": {
+                    "name": "一级警务",
+                    "objName": "yjjw",
+                    "value": "3025"
+                }
+            }
+        },
+        "xyr": {
+            "name": "抓获嫌疑人数及挽回经济损失",
+            "objName": "xyr",
+            "data": {
+                "whjjss": {
+                    "name": "挽回经济损失",
+                    "objName": "whjjss",
+                    "value": "20万元"
+                },
+                "zbxyr": {
+                    "name": "抓获嫌疑人",
+                    "objName": "zbxyr",
+                    "value": "99人"
                 }
             }
         }
-
     }
-
 }

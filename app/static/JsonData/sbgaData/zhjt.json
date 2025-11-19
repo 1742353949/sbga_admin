@@ -1,0 +1,270 @@
+{
+    "name": "智慧交通",
+    "objName": "zhjt",
+    "data": {
+        "sglb": {
+            "name": "事故列表",
+            "objName": "sglb",
+            "data": [
+                {
+                    "name": "事故类型",
+                    "objName": "sglx",
+                    "value": "轻微事件",
+                    "sgdd": "妥甸镇派出所",
+                    "sgrq": "2025-11-1"
+                },
+                {
+                    "name": "事故类型",
+                    "objName": "sglx",
+                    "value": "轻微事件",
+                    " sgdd ": "妥甸镇派出所",
+                    "sgrq": "2025-11-1"
+                },
+                 {
+                    "name": "事故类型",
+                    "objName": "sglx",
+                    "value": "轻微事件",
+                    "sgdd": "妥甸镇派出所",
+                    "sgrq": "2025-11-1"
+                },
+                 {
+                    "name": "事故类型",
+                    "objName": "sglx",
+                    "value": "轻微事件",
+                    "sgdd": "妥甸镇派出所",
+                    "sgrq": "2025-11-1"
+                },
+                 {
+                    "name": "事故类型",
+                    "objName": "sglx",
+                    "value": "轻微事件",
+                    "sgdd": "妥甸镇派出所",
+                    "sgrq": "2025-11-1"
+                },
+                 {
+                    "name": "事故类型",
+                    "objName": "sglx",
+                    "value": "轻微事件",
+                    "sgdd": "妥甸镇派出所",
+                    "sgrq": "2025-11-1"
+                },
+                 {
+                    "name": "事故类型",
+                    "objName": "sglx",
+                    "value": "轻微事件",
+                    "sgdd": "妥甸镇派出所",
+                    "sgrq": "2025-11-1"
+                }
+           ]
+        },
+        "sgtj": {
+            "name": "事故统计",
+            "objName": "sgtj",
+            "data": [{
+                "name": "事故总数",
+            "objName": "sgzs",
+            "value": "10件"
+            },
+            
+                    {
+                "name": "6月",
+             
+                "data": [
+                     {
+                        "name": "轻微事故",
+                        "objName": "qwsg",
+                        "value": "8件"
+                    },
+                    {
+                        "name": "一般事故",
+                        "objName": "ybsg",
+                        "value": "9件"
+                    },
+                    {
+                        "name": "重大事故",
+                        "objName": "zdsg",
+                        "value": "5件"
+                    }
+                       ]
+                    },
+                    {
+                "name": "7月",
+                "data": {
+                    "qwsg": {
+                        "name": "轻微事故",
+                        "objName": "qwsg",
+                        "value": "8件"
+                    },
+                    "ybsg": {
+                        "name": "一般事故",
+                        "objName": "ybsg",
+                        "value": "9件"
+                    },
+                    "zdsg": {
+                        "name": "重大事故",
+                        "objName": "zdsg",
+                        "value": "5件"
+                    }
+                        } 
+                    },
+                    {
+                "name": "8月",
+                "data": {
+                    "qwsg": {
+                        "name": "轻微事故",
+                        "objName": "qwsg",
+                        "value": "8件"
+                    },
+                    "ybsg": {
+                        "name": "一般事故",
+                        "objName": "ybsg",
+                        "value": "9件"
+                    },
+                    "zdsg": {
+                        "name": "重大事故",
+                        "objName": "zdsg",
+                        "value": "5件"
+                    }
+                        } 
+                    },
+                    {
+                "name": "9月",
+                "data": {
+                    "qwsg": {
+                        "name": "轻微事故",
+                        "objName": "qwsg",
+                        "value": "8件"
+                    },
+                    "ybsg": {
+                        "name": "一般事故",
+                        "objName": "ybsg",
+                        "value": "9件"
+                    },
+                    "zdsg": {
+                        "name": "重大事故",
+                        "objName": "zdsg",
+                        "value": "5件"
+                    }
+                        } 
+                    },
+                    {
+                "name": "10月",
+                "data": {
+                    "qwsg": {
+                        "name": "轻微事故",
+                        "objName": "qwsg",
+                        "value": "8件"
+                    },
+                    "ybsg": {
+                        "name": "一般事故",
+                        "objName": "ybsg",
+                        "value": "9件"
+                    },
+                    "zdsg": {
+                        "name": "重大事故",
+                        "objName": "zdsg",
+                        "value": "5件"
+                    }
+                        } 
+                    },
+                    {
+                "name": "11月",
+                "data": {
+                    "qwsg": {
+                        "name": "轻微事故",
+                        "objName": "qwsg",
+                        "value": "8件"
+                    },
+                    "ybsg": {
+                        "name": "一般事故",
+                        "objName": "ybsg",
+                        "value": "9件"
+                    },
+                    "zdsg": {
+                        "name": "重大事故",
+                        "objName": "zdsg",
+                        "value": "5件"
+                    }
+                        } 
+                    },
+                    {
+                "name": "12月",
+                "data": {
+                    "qwsg": {
+                        "name": "轻微事故",
+                        "objName": "qwsg",
+                        "value": "8件"
+                    },
+                    "ybsg": {
+                        "name": "一般事故",
+                        "objName": "ybsg",
+                        "value": "9件"
+                    },
+                    "zdsg": {
+                        "name": "重大事故",
+                        "objName": "zdsg",
+                        "value": "5件"
+                    }
+                        } 
+                    }
+                    
+                              
+                            ]              
+                     
+                 
+        },
+        "sglx": {
+            "name": "事故类型",
+            "objName": "sglx",
+            "data": {
+                "zs": {
+                    "name": "事故总数",
+                    "objName": "zs",
+                    "value": "15632个"
+                },
+                "qwsg": {
+                    "name": "轻微事故",
+                    "objName": "qwsg",
+                    "value": "7542个"
+                },
+                "ybsg": {
+                    "name": "一般事故",
+                    "objName": "ybsg",
+                    "value": "8452个"
+                },
+                "zssg": {
+                    "name": "重大事故",
+                    "objName": "zdsg",
+                    "value": "182个"
+                },
+                "tdsg": {
+                    "name": "特大事故",
+                    "objName": "tdsg",
+                    "value": "182个"
+                }
+            }
+        },
+        "sbjc": {
+            "name": "设备监测",
+            "objName": "sbjc",
+            "data": {
+                "jk": {
+                    "name": "监控",
+                    "objName": "jk",
+                    "value": "300",
+                    "在线": "280",
+                    "离线": "19",
+                    "故障": "1"
+                },
+                "hld": {
+                    "name": "红绿灯",
+                    "objName": "hld",
+                    "value": "50",
+                    "在线": "20",
+                    "离线": "19",
+                    "故障": "1"
+                }
+            }
+        }
+    }
+}

@@ -20,7 +20,7 @@ def demo(url):
         #js css 访问
         from flask import send_from_directory
         import os
-        static_dir = os.path.join(os.getcwd(), 'app\static')
+        static_dir = os.path.join(os.getcwd(), 'app/static')
         print(static_dir)
         return send_from_directory(static_dir, url)
         
@@ -35,3 +35,19 @@ def index():
 @admin.route('/login', methods=['GET','POST'])
 def login():
     return c_admin.login()
+
+@admin.route('/SBGA/jsonmanage', methods=['GET','POST'])
+def SBGA_jsonmanage():
+    return render_template('Admin/SBGA/jsonmanage.html')
+
+@admin.route('/SBGA/apimanage', methods=['GET','POST'])
+def SBGA_apimanage():
+    return render_template('Admin/SBGA/apimanage.html')
+
+@admin.route('/SBGA/upload', methods=['GET','POST'])
+def SBGA_upload():
+    return render_template('Admin/SBGA/upload.html')
+
+@admin.route('/SBGA/ImportManager', methods=['GET','POST'])
+def SBGA_ImportManager():
+    return render_template('Admin/SBGA/ImportManager.html')
