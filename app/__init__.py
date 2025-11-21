@@ -20,8 +20,14 @@ def create_app():
     #跨域处理
     CORS(app)
     #导入配置文件
-    app.config.from_object(config)
+    # app.config.from_object(config)
+    app.config.from_object(config['default'])  # 确保加载正确的配置
     
+    # 确保设置密钥（额外保险）
+ # 确保设置密钥（额外保险）
+    if not app.secret_key:
+        app.secret_key = app.config.get('SECRET_KEY')
+            
     # 确保JSON响应正确处理Unicode字符
     app.config['JSON_AS_ASCII'] = False
     # 在Flask 3.x中，通过json.provider设置ensure_ascii属性
@@ -57,6 +63,13 @@ def create_app():
     # 注册导入功能路由
     from app.routes.Admin.ImportRoute import import_bp
     app.register_blueprint(import_bp)
+    
+       # 注册二次预警测试
+    from app.controllers.EcyjController import ecyj
+    app.register_blueprint(ecyj)
+    
+    
+    
     
     # 设置静态文件访问
     @app.route('/static/<path:filename>')

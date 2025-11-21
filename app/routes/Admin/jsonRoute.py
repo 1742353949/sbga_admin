@@ -1,4 +1,4 @@
-#认证相关路由
+# app/static/JsonData/sbgaData/json_api.py
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask import Flask, request, jsonify, send_from_directory
 import json
@@ -12,12 +12,17 @@ CURRENT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.pa
 # 服务静态文件
 @jsonmanage.route('/<path:filename>')
 def serve_static(filename):
-    return send_from_directory(os.path.dirname(os.path.abspath(__file__)), filename)
+    return send_from_directory(CURRENT_DIR, filename)
 
 # 首页路由
 @jsonmanage.route('/')
 def index():
-    return send_from_directory(os.path.dirname(os.path.abspath(__file__)), 'templates/Admin/SBGA/jsonmanage.html')
+    return send_from_directory(CURRENT_DIR, 'jsonmanage.html')
+
+# 查看页面路由
+@jsonmanage.route('/view')
+def view():
+    return send_from_directory(CURRENT_DIR, 'view.html')
 
 # 保存JSON数据的API端点
 @jsonmanage.route('/api/save-json-data', methods=['POST'])
@@ -34,9 +39,6 @@ def save_json_data():
         # 定义文件路径
         file_path = os.path.join(CURRENT_DIR, filename)
         
-        # 确保目录存在
-        os.makedirs(CURRENT_DIR, exist_ok=True)
-        
         # 写入文件
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(json_data, f, ensure_ascii=False, indent=4)
@@ -47,7 +49,7 @@ def save_json_data():
         print(f'保存数据时出错: {e}')
         return jsonify({'success': False, 'message': f'保存数据时出错: {str(e)}'}), 500
 
-# 读取指定JSON文件内容的API端点 static\JsonData\sbgaData
+# 读取指定JSON文件内容的API端点
 @jsonmanage.route('/api/read-json-file', methods=['GET'])
 def read_json_file():
     try:
@@ -112,9 +114,6 @@ def create_json_file():
         # 检查文件是否已存在
         if os.path.exists(file_path):
             return jsonify({'success': False, 'message': '文件已存在'}), 400
-            
-        # 确保目录存在
-        os.makedirs(CURRENT_DIR, exist_ok=True)
         
         # 写入文件
         with open(file_path, 'w', encoding='utf-8') as f:
@@ -130,11 +129,10 @@ def create_json_file():
 @jsonmanage.route('/api/json-files', methods=['GET'])
 def get_json_files():
     try:
-        # 确保目录存在
-        os.makedirs(CURRENT_DIR, exist_ok=True)
         # 获取目录下所有json文件
         files = [f for f in os.listdir(CURRENT_DIR) if f.endswith('.json')]
         return jsonify({'success': True, 'files': files})
     except Exception as e:
         print(f'获取文件列表时出错: {e}')
         return jsonify({'success': False, 'message': f'获取文件列表时出错: {str(e)}'}), 500
+

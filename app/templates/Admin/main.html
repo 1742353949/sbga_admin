@@ -34,7 +34,8 @@
             <li class="nav-item nav-item-has-subnav">
               <a href="javascript:void(0)"><i class="mdi mdi-json"></i> json数据管理</a>
               <ul class="nav nav-subnav">                
-                <li> <a href="javascript:void(0)" data-href="/admin/SBGA/jsonmanage"><i class="mdi mdi-json"></i>数据管理</a> </li>                
+                <li> <a href="javascript:void(0)" data-href="/admin/SBGA/view"><i class="mdi mdi-json"></i>数据查看</a> </li>  
+                <li> <a href="javascript:void(0)" data-href="/admin/SBGA/jsonmanage"><i class="mdi mdi-json"></i>数据编辑</a> </li>                
               </ul>
             </li>
             <li class="nav-item nav-item-has-subnav">
@@ -52,16 +53,23 @@
             <li class="nav-item nav-item-has-subnav">
               <a href="javascript:void(0)"><i class="mdi mdi-palette"></i> 用户管理</a>
               <ul class="nav nav-subnav">
-                <li> <a href="javascript:void(0)" data-href="/admin/login">数据更改</a> </li>
+                <li> <a href="javascript:void(0)" data-href="/admin/login">用户数据</a> </li>
+                <li> <a href="javascript:void(0)" data-href="/admin/login"></a> </li>
                 <li> <a href="javascript:void(0)" data-href="/admin/Demo/index.html">后台模板</a> </li>
                 
+              </ul>
+            </li>
+            <li class="nav-item nav-item-has-subnav">
+              <a href="javascript:void(0)"><i class="mdi mdi-palette"></i>角色权限管理</a>
+              <ul class="nav nav-subnav">
+                <li> <a href="javascript:void(0)" data-href="/admin/SBGA/rabc">角色权限设置</a> </li> 
               </ul>
             </li>
 
             
         
         <div class="sidebar-footer">
-          <p class="copyright">Copyright &copy; 2019. <a target="_blank" href="http://lyear.itshubao.com">IT书包</a> All rights reserved.</p>
+          <p class="copyright">Copyright &copy; 2025. <a target="_blank" href="/admin/index">后台管理</a> All rights reserved.</p>
         </div>
       </div>
       
@@ -81,21 +89,21 @@
               <span class="lyear-toggler-bar"></span>
               <span class="lyear-toggler-bar"></span>
             </div>
-            <span class="navbar-page-title"> 首页 </span>
+            <span class="navbar-page-title"> 后台首页 </span>
           </div>
           
           <ul class="topbar-right">
             <li class="dropdown dropdown-profile">
               <a href="javascript:void(0)" data-toggle="dropdown">
-                <img class="img-avatar img-avatar-48 m-r-10" src="/static/images/users/avatar.jpg" alt="笔下光年" />
-                <span>笔下光年 <span class="caret"></span></span>
+                <!-- <img class="img-avatar img-avatar-48 m-r-10"  alt="{session['username']}" /> -->
+                <span>设置<span class="caret"></span></span>
               </a>
               <ul class="dropdown-menu dropdown-menu-right">
-                <li> <a href="javascript:void(0)" data-href="lyear_pages_profile.html"><i class="mdi mdi-account"></i> 个人信息</a> </li>
-                <li> <a href="javascript:void(0)" data-href="lyear_pages_edit_pwd.html"><i class="mdi mdi-lock-outline"></i> 修改密码</a> </li>
-                <li> <a href="javascript:void(0)" data-href="javascript:void(0)"><i class="mdi mdi-delete"></i> 清空缓存</a></li>
+                <li> <a href="/admin/SBGA/grxx"><i class="mdi mdi-account"></i> 个人信息</a> </li>
+                <li> <a href="lyear_pages_edit_pwd.html"><i class="mdi mdi-lock-outline"></i> 修改密码</a> </li>
+                <li> <a href="javascript:void(0)"><i class="mdi mdi-delete"></i> 清空缓存</a></li>
                 <li class="divider"></li>
-                <li> <a href="javascript:void(0)" data-href="lyear_pages_login.html"><i class="mdi mdi-logout-variant"></i> 退出登录</a> </li>
+                <li> <a href="/admin/login"><i class="mdi mdi-logout-variant"></i> 退出登录</a> </li>
               </ul>
             </li>
             <!--切换主题配色-->

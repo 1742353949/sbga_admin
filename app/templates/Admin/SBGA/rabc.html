@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理</title>
+    <link href="../../../static/Admin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../static/Admin/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="../../../static/Admin/css/style.min.css" rel="stylesheet">
+    <style>
+        .permission-tree {
+            margin-left: 20px;
+        }
+        .permission-item {
+            margin: 5px 0;
+        }
+        .checkbox-parent {
+            font-weight: bold;
+        }
+        .checkbox-child {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid p-t-15">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>权限管理</h4>
+                </div>
+                <div class="card-body">
+                    <form id="permission-form">
+                        <div class="form-group">
+                            <label for="role-select">选择角色:</label>
+                            <select class="form-control" id="role-select" name="role_id">
+                                <option value="">请选择角色</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="checkbox" id="check-all">
+                            <label for="check-all">全选/全不选</label>
+                        </div>
+                        
+                        <div id="permission-tree">
+                            <!-- 权限树将在这里动态生成 -->
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">保存权限</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../../static/Admin/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../../static/Admin/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../static/Admin/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="../../../static/Admin/js/main.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    // 页面加载时获取角色和权限数据
+    loadRoles();
+    loadPermissions();
+    
+    // 全选功能
+    $('#check-all').on('change', function() {
+        $('input[name="permissions"]').prop('checked', $(this).is(':checked'));
+    });
+    
+    // 角色选择变化时，加载该角色已有的权限
+    $('#role-select').on('change', function() {
+        var roleId = $(this).val();
+        if (roleId) {
+            loadRolePermissions(roleId);
+        } else {
+            // 清除所有选中状态
+            $('input[name="permissions"]').prop('checked', false);
+        }
+    });
+    
+    // 表单提交
+    $('#permission-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        var roleId = $('#role-select').val();
+        if (!roleId) {
+            alert('请选择角色');
+            return;
+        }
+        
+        // 获取选中的权限
+        var selectedPermissions = [];
+        $('input[name="permissions"]:checked').each(function() {
+            selectedPermissions.push($(this).val());
+        });
+        
+        // 发送请求保存权限
+        $.ajax({
+            url: '/admin/SBGA/rabc/save_permissions',
+            type: 'POST',
+            data: {
+                role_id: roleId,
+                permissions: selectedPermissions
+            },
+            success: function(res) {
+                if (res.status === 'success') {
+                    alert('权限分配成功');
+                } else {
+                    alert('权限分配失败: ' + res.message);
+                }
+            },
+            error: function() {
+                alert('请求失败，请重试');
+            }
+        });
+    });
+});
+
+// 加载所有角色
+function loadRoles() {
+    $.ajax({
+        url: '/admin/SBGA/rabc/get_roles',
+        type: 'GET',
+        success: function(res) {
+            if (res.status === 'success') {
+                var roleSelect = $('#role-select');
+                roleSelect.empty();
+                roleSelect.append('<option value="">请选择角色</option>');
+                
+                res.data.forEach(function(role) {
+                    roleSelect.append(`<option value="${role.id}">${role.name}</option>`);
+                });
+            } else {
+                alert('获取角色列表失败: ' + res.message);
+            }
+        },
+        error: function() {
+            alert('获取角色列表失败');
+        }
+    });
+}
+
+// 加载所有权限
+var permissionsData = [];
+
+function loadPermissions() {
+    $.ajax({
+        url: '/admin/SBGA/rabc/get_permissions',
+        type: 'GET',
+        success: function(res) {
+            if (res.status === 'success') {
+                permissionsData = res.data;
+                renderPermissionTree();
+            } else {
+                alert('获取权限列表失败: ' + res.message);
+            }
+        },
+        error: function() {
+            alert('获取权限列表失败');
+        }
+    });
+}
+
+// 渲染权限树
+function renderPermissionTree() {
+    var treeContainer = $('#permission-tree');
+    treeContainer.empty();
+    
+    // 按模块分组权限
+    var modules = {};
+    permissionsData.forEach(function(permission) {
+        if (!modules[permission.module]) {
+            modules[permission.module] = [];
+        }
+        modules[permission.module].push(permission);
+    });
+    
+    // 为每个模块创建一个父级复选框
+    for (var moduleName in modules) {
+        var moduleId = 'module_' + moduleName;
+        var moduleHtml = `
+            <div class="permission-item">
+                <input type="checkbox" id="${moduleId}" class="checkbox-parent" data-module="${moduleName}">
+                <label for="${moduleId}">${moduleName}</label>
+                <div class="permission-tree">
+        `;
+        
+        // 为模块内的每个权限创建子级复选框
+        modules[moduleName].forEach(function(permission) {
+            moduleHtml += `
+                <div class="permission-item">
+                    <input type="checkbox" id="perm_${permission.id}" name="permissions" value="${permission.id}" class="checkbox-child" data-module="${moduleName}">
+                    <label for="perm_${permission.id}">${permission.description}</label>
+                </div>
+            `;
+        });
+        
+        moduleHtml += `
+                </div>
+            </div>
+        `;
+        
+        treeContainer.append(moduleHtml);
+    }
+    
+    // 绑定父级复选框事件
+    $('.checkbox-parent').on('change', function() {
+        var moduleName = $(this).data('module');
+        $(`.checkbox-child[data-module="${moduleName}"]`).prop('checked', $(this).is(':checked'));
+    });
+    
+    // 绑定子级复选框事件
+    $('.checkbox-child').on('change', function() {
+        var moduleName = $(this).data('module');
+        var allChecked = $(`.checkbox-child[data-module="${moduleName}"]`).length === 
+                         $(`.checkbox-child[data-module="${moduleName}"]:checked`).length;
+        $(`.checkbox-parent[data-module="${moduleName}"]`).prop('checked', allChecked);
+    });
+}
+
+// 加载指定角色的权限
+function loadRolePermissions(roleId) {
+    $.ajax({
+        url: '/admin/SBGA/rabc/get_role_permissions/' + roleId,
+        type: 'GET',
+        success: function(res) {
+            if (res.status === 'success') {
+                // 清除所有选中状态
+                $('input[name="permissions"]').prop('checked', false);
+                $('.checkbox-parent').prop('checked', false);
+                
+                // 设置该角色拥有的权限为选中状态
+                res.data.forEach(function(permissionId) {
+                    $(`#perm_${permissionId}`).prop('checked', true);
+                });
+                
+                // 更新父级复选框状态
+                updateParentCheckboxes();
+            } else {
+                alert('获取角色权限失败: ' + res.message);
+            }
+        },
+        error: function() {
+            alert('获取角色权限失败');
+        }
+    });
+}
+
+// 更新父级复选框状态
+function updateParentCheckboxes() {
+    $('.checkbox-parent').each(function() {
+        var moduleName = $(this).data('module');
+        var allChecked = $(`.checkbox-child[data-module="${moduleName}"]`).length === 
+                         $(`.checkbox-child[data-module="${moduleName}"]:checked`).length;
+        $(this).prop('checked', allChecked);
+    });
+}
+</script>
+</body>
+</html>

@@ -59,5 +59,22 @@
         "rawType": "application/json",
         "body": "",
         "folderId": "1"
+    },
+    {
+        "id": 4,
+        "name": "二次预警测试",
+        "method": "GET",
+        "url": "http://127.0.0.1:5004/ecyj/ecyjtest",
+        "params": [],
+        "headers": [
+            {
+                "key": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "bodyType": "none",
+        "rawType": "application/json",
+        "body": "",
+        "folderId": "1"
     }
 ]

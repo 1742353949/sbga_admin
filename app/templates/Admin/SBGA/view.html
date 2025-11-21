@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据查看</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .btn {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .btn-success {
+            background-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+        }
+        .btn-info:hover {
+            background-color: #138496;
+        }
+        .file-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .file-item {
+            padding: 10px 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .file-item.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .module-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .module-card h3 {
+            margin-top: 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        .error {
+            color: red;
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .multi-value-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .multi-value-item > div {
+            flex: 1;
+            min-width: 200px;
+        }
+        .multi-value-item .item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .multi-value-item .item-value {
+            color: #555;
+        }
+        /* 新增样式：用于显示嵌套数据 */
+        .nested-data-container {
+            margin-left: 20px;
+            border-left: 2px solid #007bff;
+            padding-left: 15px;
+        }
+        .data-node {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+        .data-node-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .data-node-title {
+            font-weight: bold;
+        }
+        .data-node-controls {
+            display: flex;
+            gap: 5px;
+        }
+        .property-editor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .property-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        .property-field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .property-field input, .property-field textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .toggle-children {
+            cursor: pointer;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .children-container {
+            margin-top: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        .property-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+        .property-label {
+            font-weight: normal;
+        }
+        .property-value {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>数据查看</h1>
+        
+        <div class="section">
+            <div class="section-title">选择文件</div>
+            <div class="file-list" id="fileList">
+                <!-- 文件列表将通过JavaScript动态加载 -->
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">文件内容</div>
+            <div id="fileContent">
+                <div class="info">请先选择一个文件</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentFiles = [];
+        let currentViewFile = null;
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载文件列表
+            loadFileLists();
+        });
+        
+        // 加载文件列表
+        function loadFileLists() {
+            fetch('/api/json-files')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentFiles = data.files;
+                        renderFileLists();
+                    } else {
+                        showError('获取文件列表失败: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    showError('获取文件列表出错: ' + error.message);
+                });
+        }
+        
+        // 渲染文件列表
+        function renderFileLists() {
+            const fileListContainer = document.getElementById('fileList');
+            
+            // 清空容器
+            fileListContainer.innerHTML = '';
+            
+            // 添加文件项
+            currentFiles.forEach(file => {
+                // 查看标签的文件项
+                const fileItemView = document.createElement('div');
+                fileItemView.className = 'file-item';
+                if (file === currentViewFile) {
+                    fileItemView.classList.add('active');
+                }
+                fileItemView.textContent = file;
+                fileItemView.addEventListener('click', () => {
+                    currentViewFile = file;
+                    renderFileLists(); // 重新渲染以更新选中状态
+                    loadFileContent(file);
+                });
+                
+                fileListContainer.appendChild(fileItemView);
+            });
+        }
+        
+        // 加载文件内容用于查看
+        function loadFileContent(filename) {
+            fetch(`/api/read-json-file?filename=${encodeURIComponent(filename)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderFileContent(filename, data.data);
+                    } else {
+                        showError('读取文件失败: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    showError('读取文件出错: ' + error.message);
+                });
+        }
+        
+        // 渲染文件内容用于查看
+        function renderFileContent(filename, data) {
+            const container = document.getElementById('fileContent');
+            container.innerHTML = '';
+            
+            // 显示主标题
+            const title = document.createElement('h2');
+            title.textContent = data.name;
+            container.appendChild(title);
+            
+            // 遍历各个数据模块，保持原有顺序
+            for (const key in data.data) {
+                const module = data.data[key];
+                
+                const section = document.createElement('div');
+                section.className = 'section';
+                
+                const sectionTitle = document.createElement('div');
+                sectionTitle.className = 'section-title';
+                sectionTitle.textContent = module.name;
+                section.appendChild(sectionTitle);
+                
+                // 特殊处理案件占比模块(ajzb)
+                if (key === 'ajzb') {
+                    // 处理案件占比模块的直接数据项（民事案件、刑事案件、其他案件）
+                    for (const itemKey in module.data) {
+                        // 跳过table字段，稍后单独处理
+                        if (itemKey !== 'table') {
+                            const item = module.data[itemKey];
+                            
+                            // 显示单个值的项目
+                            const dataItem = document.createElement('div');
+                            dataItem.className = 'data-item';
+                            
+                            const nameLabel = document.createElement('span');
+                            nameLabel.textContent = item.name;
+                            
+                            const valueLabel = document.createElement('span');
+                            if (item.value !== undefined) {
+                                valueLabel.textContent = item.value;
+                                if (item.rate) {
+                                    valueLabel.textContent += ` (${item.rate})`;
+                                }
+                            } else {
+                                // 如果没有value字段，显示其他字段，保持顺序
+                                let valueText = '';
+                                const fields = Object.keys(item).filter(field => 
+                                    field !== 'name' && field !== 'objName');
+                                fields.forEach((field, index) => {
+                                    if (index > 0) valueText += ', ';
+                                    valueText += `${field}: ${item[field]}`;
+                                });
+                                valueLabel.textContent = valueText || '无数据';
+                            }
+                            
+                            dataItem.appendChild(nameLabel);
+                            dataItem.appendChild(valueLabel);
+                            section.appendChild(dataItem);
+                        }
+                    }
+                    
+                    // 处理表格数据（月份数据）
+                    if (module.data && module.data.table) {
+                        const tableContainer = document.createElement('div');
+                        tableContainer.className = 'table-container';
+                        
+                        // 为月份数据创建一个独立的展示区域
+                        const monthSection = document.createElement('div');
+                        monthSection.className = 'module-grid';
+                        
+                        // 处理月份数据（数组）
+                        if (module.data.table.data && Array.isArray(module.data.table.data)) {
+                            module.data.table.data.forEach((monthData, index) => {
+                                // 为每个月份创建一个卡片
+                                const monthCard = document.createElement('div');
+                                monthCard.className = 'module-card';
+                                
+                                // 显示月份名称
+                                const monthTitle = document.createElement('h4');
+                                monthTitle.textContent = monthData.name || `月份${index + 1}`;
+                                monthCard.appendChild(monthTitle);
+                                
+                                // 显示该月份的案件数据
+                                if (monthData.data && typeof monthData.data === 'object') {
+                                    for (const caseType in monthData.data) {
+                                        const caseData = monthData.data[caseType];
+                                        if (caseData && typeof caseData === 'object') {
+                                            const caseItem = document.createElement('div');
+                                            caseItem.className = 'data-item';
+                                            
+                                            const caseName = document.createElement('span');
+                                            caseName.textContent = caseData.name || caseType;
+                                            
+                                            const caseValue = document.createElement('span');
+                                            caseValue.textContent = caseData.value || '无数据';
+                                            
+                                            caseItem.appendChild(caseName);
+                                            caseItem.appendChild(caseValue);
+                                            monthCard.appendChild(caseItem);
+                                        }
+                                    }
+                                }
+                                
+                                monthSection.appendChild(monthCard);
+                            });
+                        }
+                        
+                        section.appendChild(monthSection);
+                    }
+                } 
+                // 处理其他包含表格数据的模块
+                else if (module.data && module.data.table) {
+                    // 表格数据（如xzfb copy.json中的列表数据）
+                    const tableContainer = document.createElement('div');
+                    tableContainer.className = 'table-container';
+                    
+                    const table = document.createElement('table');
+                    table.className = 'data-table';
+                    
+                    // 创建表头
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    
+                    // 获取字段名，保持顺序
+                    if (module.data.table.data && module.data.table.data.length > 0) {
+                        // 保持与xzfb copy 2.json中相同的字段顺序: name, objName, hushu, ldsl
+                        const preferredOrder = ['name', 'objName', 'hushu', 'ldsl'];
+                        let fields = Object.keys(module.data.table.data[0]);
+                        
+                        // 按照preferredOrder排序，不在列表中的字段放到最后
+                        fields.sort((a, b) => {
+                            const indexA = preferredOrder.indexOf(a);
+                            const indexB = preferredOrder.indexOf(b);
+                            
+                            // 如果两个字段都在preferredOrder中，按preferredOrder排序
+                            if (indexA !== -1 && indexB !== -1) {
+                                return indexA - indexB;
+                            }
+                            
+                            // 如果只有一个是preferredOrder中的字段，preferredOrder中的排在前面
+                            if (indexA !== -1) {
+                                return -1;
+                            }
+                            
+                            if (indexB !== -1) {
+                                return 1;
+                            }
+                            
+                            // 如果两个都不在preferredOrder中，保持原有顺序
+                            return 0;
+                        });
+                        
+                        fields.forEach(field => {
+                            const th = document.createElement('th');
+                            th.textContent = field;
+                            headerRow.appendChild(th);
+                        });
+                        
+                        thead.appendChild(headerRow);
+                        table.appendChild(thead);
+                        
+                        // 创建表体，保持数据顺序
+                        const tbody = document.createElement('tbody');
+                        module.data.table.data.forEach(row => {
+                            const tr = document.createElement('tr');
+                            fields.forEach(field => {
+                                const td = document.createElement('td');
+                                td.textContent = row[field] || '';
+                                tr.appendChild(td);
+                            });
+                            tbody.appendChild(tr);
+                        });
+                        
+                        table.appendChild(tbody);
+                    }
+                    
+                    tableContainer.appendChild(table);
+                    section.appendChild(tableContainer);
+                } else if (hasNestedDataStructure(module.data)) {
+                    // 处理复杂的嵌套数据结构
+                    const moduleGrid = document.createElement('div');
+                    moduleGrid.className = 'module-grid';
+                    
+                    // 保持数据顺序
+                    for (const itemKey in module.data) {
+                        const item = module.data[itemKey];
+                        
+                        if (itemKey !== 'table' && item && typeof item === 'object') {
+                            const card = document.createElement('div');
+                            card.className = 'module-card';
+                            
+                            const cardTitle = document.createElement('div');
+                            cardTitle.className = 'module-card-title';
+                            cardTitle.textContent = item.name || itemKey;
+                            card.appendChild(cardTitle);
+                            
+                            // 渲染嵌套数据
+                            renderNestedData(card, item);
+                            
+                            moduleGrid.appendChild(card);
+                        }
+                    }
+                    
+                    section.appendChild(moduleGrid);
+                } else if (module.data) {
+                    // 普通数据列表，保持顺序
+                    for (const itemKey in module.data) {
+                        if (itemKey !== 'table') {
+                            const item = module.data[itemKey];
+                            
+                            // 检查是否有多个值需要显示
+                            const valueFields = Object.keys(item).filter(field => 
+                                field !== 'name' && field !== 'objName');
+                            
+                            if (valueFields.length > 1) {
+                                // 显示多个值的项目
+                                const multiValueItem = document.createElement('div');
+                                multiValueItem.className = 'multi-value-item';
+                                
+                                const titleDiv = document.createElement('div');
+                                titleDiv.className = 'item-title';
+                                titleDiv.textContent = item.name;
+                                multiValueItem.appendChild(titleDiv);
+                                
+                                // 保持字段顺序
+                                valueFields.forEach(field => {
+                                    const valueDiv = document.createElement('div');
+                                    const valueTitle = document.createElement('div');
+                                    valueTitle.className = 'item-title';
+                                    valueTitle.textContent = field;
+                                    
+                                    const valueContent = document.createElement('div');
+                                    valueContent.className = 'item-value';
+                                    valueContent.textContent = item[field];
+                                    
+                                    valueDiv.appendChild(valueTitle);
+                                    valueDiv.appendChild(valueContent);
+                                    multiValueItem.appendChild(valueDiv);
+                                });
+                                
+                                section.appendChild(multiValueItem);
+                            } else {
+                                // 显示单个值的项目
+                                const dataItem = document.createElement('div');
+                                dataItem.className = 'data-item';
+                                
+                                const nameLabel = document.createElement('span');
+                                nameLabel.textContent = item.name;
+                                
+                                const valueLabel = document.createElement('span');
+                                if (item.value !== undefined) {
+                                    valueLabel.textContent = item.value;
+                                    if (item.rate) {
+                                        valueLabel.textContent += ` (${item.rate})`;
+                                    }
+                                } else {
+                                    // 如果没有value字段，显示其他字段，保持顺序
+                                    let valueText = '';
+                                    const fields = Object.keys(item).filter(field => 
+                                        field !== 'name' && field !== 'objName');
+                                    fields.forEach((field, index) => {
+                                        if (index > 0) valueText += ', ';
+                                        valueText += `${field}: ${item[field]}`;
+                                    });
+                                    valueLabel.textContent = valueText || '无数据';
+                                }
+                                
+                                dataItem.appendChild(nameLabel);
+                                dataItem.appendChild(valueLabel);
+                                section.appendChild(dataItem);
+                            }
+                        }
+                    }
+                }
+                
+                container.appendChild(section);
+            }
+        }
+
+        // 检查是否具有嵌套数据结构
+        function hasNestedDataStructure(data) {
+            if (!data || typeof data !== 'object') return false;
+            
+            for (const key in data) {
+                const item = data[key];
+                // 检查是否包含data属性，或者包含其他字段
+                if (item && typeof item === 'object') {
+                    // 检查是否包含data属性，或者包含其他字段
+                    const otherFields = Object.keys(item).filter(k => k !== 'name' && k !== 'objName');
+                    if (item.data || otherFields.length > 0) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
+        // 渲染嵌套数据
+        function renderNestedData(container, item) {
+            // 渲染直接属性（除了name和objName），保持顺序
+            const fields = Object.keys(item).filter(field => 
+                field !== 'name' && field !== 'objName' && field !== 'data');
+            fields.forEach(field => {
+                const propertyItem = document.createElement('div');
+                propertyItem.className = 'property-item';
+                
+                const label = document.createElement('span');
+                label.className = 'property-label';
+                label.textContent = field;
+                
+                const value = document.createElement('span');
+                value.className = 'property-value';
+                value.textContent = item[field];
+                
+                propertyItem.appendChild(label);
+                propertyItem.appendChild(value);
+                container.appendChild(propertyItem);
+            });
+            
+            // 渲染嵌套的data数据
+            if (item.data && typeof item.data === 'object') {
+                if (!Array.isArray(item.data)) {
+                    // 对象类型嵌套数据，保持顺序
+                    for (const subKey in item.data) {
+                        const subItem = item.data[subKey];
+                        if (subItem && typeof subItem === 'object') {
+                            const nestedContainer = document.createElement('div');
+                            nestedContainer.className = 'nested-container';
+                            
+                            const nestedTitle = document.createElement('div');
+                            nestedTitle.className = 'nested-title';
+                            nestedTitle.textContent = subItem.name || subKey;
+                            nestedContainer.appendChild(nestedTitle);
+                            
+                            // 检查是否有嵌套的data字段（如智能装备资源）
+                            if (subItem.data && typeof subItem.data === 'object' && !Array.isArray(subItem.data)) {
+                                // 处理智能装备资源的子数据（在线、离线、故障等）
+                                for (const dataKey in subItem.data) {
+                                    const dataItem = subItem.data[dataKey];
+                                    if (dataItem && typeof dataItem === 'object') {
+                                        const dataContainer = document.createElement('div');
+                                        dataContainer.className = 'property-item';
+                                        
+                                        const dataLabel = document.createElement('span');
+                                        dataLabel.className = 'property-label';
+                                        dataLabel.textContent = dataItem.name || dataKey;
+                                        
+                                        const dataValue = document.createElement('span');
+                                        dataValue.className = 'property-value';
+                                        dataValue.textContent = dataItem.value || '无数据';
+                                        
+                                        dataContainer.appendChild(dataLabel);
+                                        dataContainer.appendChild(dataValue);
+                                        nestedContainer.appendChild(dataContainer);
+                                    }
+                                }
+                            } else {
+                                // 递归渲染子项
+                                renderNestedData(nestedContainer, subItem);
+                            }
+                            
+                            container.appendChild(nestedContainer);
+                        }
+                    }
+                } else {
+                    // 数组类型嵌套数据（如案件占比中的月份数据）
+                    const nestedContainer = document.createElement('div');
+                    nestedContainer.className = 'nested-container';
+                    
+                    item.data.forEach((arrayItem, index) => {
+                        if (typeof arrayItem === 'object' && arrayItem !== null) {
+                            // 为每个月份创建一个容器
+                            const monthContainer = document.createElement('div');
+                            monthContainer.className = 'nested-container';
+                            
+                            // 显示月份名称
+                            const monthTitle = document.createElement('div');
+                            monthTitle.className = 'nested-title';
+                            monthTitle.textContent = arrayItem.name || `数据项 ${index + 1}`;
+                            monthContainer.appendChild(monthTitle);
+                            
+                            // 处理月份中的案件数据
+                            if (arrayItem.data && typeof arrayItem.data === 'object') {
+                                for (const caseType in arrayItem.data) {
+                                    const caseItem = arrayItem.data[caseType];
+                                    if (caseItem && typeof caseItem === 'object') {
+                                        // 为每种案件类型创建显示项
+                                        const caseContainer = document.createElement('div');
+                                        caseContainer.className = 'property-item';
+                                        
+                                        const caseLabel = document.createElement('span');
+                                        caseLabel.className = 'property-label';
+                                        caseLabel.textContent = caseItem.name || caseType;
+                                        
+                                        const caseValue = document.createElement('span');
+                                        caseValue.className = 'property-value';
+                                        // 显示案件的值
+                                        caseValue.textContent = caseItem.value || '无数据';
+                                        
+                                        caseContainer.appendChild(caseLabel);
+                                        caseContainer.appendChild(caseValue);
+                                        monthContainer.appendChild(caseContainer);
+                                    }
+                                }
+                            }
+                            
+                            nestedContainer.appendChild(monthContainer);
+                        }
+                    });
+                    
+                    container.appendChild(nestedContainer);
+                }
+            }
+        }
+        
+        // 显示错误信息
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(errorDiv, container.firstChild);
+            
+            // 3秒后自动移除错误信息
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

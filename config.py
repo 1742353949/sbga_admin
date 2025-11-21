@@ -1,10 +1,12 @@
 #config.py
 import os
+import secrets
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY') or 'some string'
+    # SECRET_KEY = os.getenv('SECRET_KEY') or 'some string'
+    SECRET_KEY = os.getenv('SECRET_KEY')  or secrets.token_hex(16)
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    LOCAL_DB = True
+    LOCAL_DB = False
 
     @staticmethod
     def init_app(app):
@@ -35,7 +37,7 @@ class MysqlConfig(Config):
         CHARSET = 'utf8'
         USER = 'kmlskj'
         PASSWORD = 'kmlskj@123'
-        DB = "fd_wd_ga_data"
+        DB = "sys_test"
         HOST = "132.232.137.173"
         PORT = 3306
     # if Config.LOCAL_DB:

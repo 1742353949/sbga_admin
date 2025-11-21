@@ -26,7 +26,7 @@ def demo(url):
         
 @admin.route('', methods=['GET','POST'])
 def main():
-    return c_admin.index()
+    return c_admin.login()
 
 @admin.route('/index', methods=['GET','POST'])
 def index():
@@ -39,6 +39,9 @@ def login():
 @admin.route('/SBGA/jsonmanage', methods=['GET','POST'])
 def SBGA_jsonmanage():
     return render_template('Admin/SBGA/jsonmanage.html')
+@admin.route('/SBGA/view', methods=['GET','POST'])
+def SBGA_view():
+    return render_template('Admin/SBGA/view.html')
 
 @admin.route('/SBGA/apimanage', methods=['GET','POST'])
 def SBGA_apimanage():
@@ -51,3 +54,10 @@ def SBGA_upload():
 @admin.route('/SBGA/ImportManager', methods=['GET','POST'])
 def SBGA_ImportManager():
     return render_template('Admin/SBGA/ImportManager.html')
+@admin.route('/SBGA/rabc', methods=['GET','POST'])
+def SBGA_rabc():
+    return render_template('Admin/SBGA/rabc.html')
+
+@admin.route('/SBGA/grxx',methods=['GET','POST'])
+def SBGA_grxx():
+    return render_template('Admin/SBGA/grxx.html')
