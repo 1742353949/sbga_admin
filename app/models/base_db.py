@@ -65,7 +65,8 @@ from config import MysqlConfig
 #             self.connection.close()
 #             self.connection = None
 
-from dbutils.pooled_db import PooledDB
+# from dbutils.pooled_db import PooledDB
+from DBUtils.PooledDB import PooledDB
 
 class MySQLHelper:
     def __init__(self, database=None):
