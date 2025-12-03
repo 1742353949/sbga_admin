@@ -11,8 +11,8 @@ class AdminController(MySQLHelper):
     
     def index(self):
         # 验证会话：未登录则跳转回登录页
-        if 'username' not in session:
-            return redirect(url_for('login'))
+        # if 'username' not in session:
+        #     return redirect(url_for('login'))
         # 已登录：渲染后台页面（传递用户名给前端）
         #return f"欢迎 {session['username']} 进入后台管理系统！"
         return render_template('Admin/main.html')

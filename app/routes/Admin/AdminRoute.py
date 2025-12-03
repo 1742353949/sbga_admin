@@ -26,7 +26,7 @@ def demo(url):
         
 @admin.route('', methods=['GET','POST'])
 def main():
-    return c_admin.login()
+    return c_admin.index()
 
 @admin.route('/index', methods=['GET','POST'])
 def index():

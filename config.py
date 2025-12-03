@@ -6,7 +6,7 @@ class Config:
     # SECRET_KEY = os.getenv('SECRET_KEY') or 'some string'
     SECRET_KEY = os.getenv('SECRET_KEY')  or secrets.token_hex(16)
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    LOCAL_DB = False
+    LOCAL_DB = True
 
     @staticmethod
     def init_app(app):

@@ -65,7 +65,7 @@ def create_app():
     app.register_blueprint(import_bp)
     
        # 注册二次预警测试
-    from app.controllers.EcyjController import ecyj
+    from app.controllers.Ecyjcl import ecyj
     app.register_blueprint(ecyj)
     
     

@@ -3,7 +3,9 @@ import os
 import platform
 import secrets
 import pytz,datetime
-from datetime import datetime as dt  # 使用别名避免冲突
+from datetime import datetime , timedelta as dt ,date # 使用别名避免冲突
+import json
+
 
 def gen_md5(_pwd):
     import hashlib
@@ -36,60 +38,60 @@ def base64_decode(_str):
         print(e)
         return False
     
-def echo_json(status, message, data = None, other = None,code=200):
-    '''输出json结果
-        Args:
-            status: 状态码0=success, 非0为失败
-            msg: 输出消息
-            data: 返回的数据
+# def echo_json(status, message, data = None, other = None,code=200):
+#     '''输出json结果
+#         Args:
+#             status: 状态码0=success, 非0为失败
+#             msg: 输出消息
+#             data: 返回的数据
 
-        Returns:
+#         Returns:
 
-            {'status': status, 'msg': message, 'data': data, 'other': other}
-    '''
-    response = make_response(jsonify({'status': status, 'msg': message, 'data': data, 'other': other}),code)
-    response.autocorrect_headers = False  # 防止Flask修改非标准状态码
-    return response
+#             {'status': status, 'msg': message, 'data': data, 'other': other}
+#     '''
+#     response = make_response(jsonify({'status': status, 'msg': message, 'data': data, 'other': other}),code)
+#     response.autocorrect_headers = False  # 防止Flask修改非标准状态码
+#     return response
 
-def get_page_param():
-    '''获取分页数据
-        如无分分页数据，则返回默认值[pageindex=0,pagesize=50] 
+# def get_page_param():
+#     '''获取分页数据
+#         如无分分页数据，则返回默认值[pageindex=0,pagesize=50] 
 
-        Retures:
-            [pageindex, pagesize]
-    '''
-    pageindex = 0
-    pagesize = 20
-    try:
-            #print(request.values)
-        if request.values.get("page") is not None:
-            pageindex = int(request.values.get("page"))
-        elif request.headers['page'] is not None:
-            pageindex = int(request.headers["page"])
+#         Retures:
+#             [pageindex, pagesize]
+#     '''
+#     pageindex = 0
+#     pagesize = 20
+#     try:
+#             #print(request.values)
+#         if request.values.get("page") is not None:
+#             pageindex = int(request.values.get("page"))
+#         elif request.headers['page'] is not None:
+#             pageindex = int(request.headers["page"])
 
-        if request.values.get("pagesize") is not None:
-            pagesize = int(request.values.get("pagesize"))
-        elif request.headers['pagesize'] is not None:
-            pagesize = int(request.headers["pagesize"])
+#         if request.values.get("pagesize") is not None:
+#             pagesize = int(request.values.get("pagesize"))
+#         elif request.headers['pagesize'] is not None:
+#             pagesize = int(request.headers["pagesize"])
 
-        return [pageindex, pagesize]
-    except Exception as e:
-        return [pageindex, pagesize]
+#         return [pageindex, pagesize]
+#     except Exception as e:
+#         return [pageindex, pagesize]
 
-def get_param_by_int(_name):
-    '''获取页面数值类型数据
-        Retures:
-            页面参数
-    '''
+# def get_param_by_int(_name):
+#     '''获取页面数值类型数据
+#         Retures:
+#             页面参数
+#     '''
 
-    value = 0
-    try:
-        if request.values.get(_name) is not None:
-            value = int(request.values.get(_name))
+#     value = 0
+#     try:
+#         if request.values.get(_name) is not None:
+#             value = int(request.values.get(_name))
        
-        return value
-    except Exception as e:
-        return 0
+#         return value
+#     except Exception as e:
+#         return 0
 
 def get_param_by_str(_name):
     '''获取页面类型数据
@@ -207,30 +209,30 @@ def diff_seconds(start_time, end_time):
     _e = datetime.strptime(str(end_time),"%Y-%m-%d %H:%M:%S")
     return (_e - _s).seconds
 
-def calculate_time_difference(send_time):
-    """计算与当前时间相差的秒数
-    :"""
-    from datetime import datetime
-    # 获取当前时间
-    current_time = dt.now()
+# def calculate_time_difference(send_time):
+#     """计算与当前时间相差的秒数
+#     :"""
+#     from datetime import datetime
+#     # 获取当前时间
+#     current_time = datetime.now()
     
-    # 假设 send_time 是从数据库中读取出来的 datetime 对象
-    # 如果是从字符串读取，需要先转换为 datetime 对象
-    # send_time = datetime.strptime(send_time_str, '%Y-%m-%d %H:%M:%S')
+#     # 假设 send_time 是从数据库中读取出来的 datetime 对象
+#     # 如果是从字符串读取，需要先转换为 datetime 对象
+#     # send_time = datetime.strptime(send_time_str, '%Y-%m-%d %H:%M:%S')
     
-    # 计算时间差
-    time_difference = current_time - send_time
+#     # 计算时间差
+#     time_difference = current_time - send_time
     
-    # 将时间差转换为秒
-    time_difference_in_seconds = time_difference.total_seconds()
+#     # 将时间差转换为秒
+#     time_difference_in_seconds = time_difference.total_seconds()
     
-    return time_difference_in_seconds
+#     return time_difference_in_seconds
 
-# 示例使用
-# 假设 send_time 是从数据库中读取出来的 datetime 对象
-send_time = dt(2023, 10, 1, 12, 0, 0)  # 示例时间
-seconds_difference = calculate_time_difference(send_time)
-print(f"时间差为 {seconds_difference} 秒")
+# # 示例使用
+# # 假设 send_time 是从数据库中读取出来的 datetime 对象
+# send_time = dt(2023, 10, 1, 12, 0, 0)  # 示例时间
+# seconds_difference = calculate_time_difference(send_time)
+# print(f"时间差为 {seconds_difference} 秒")
 def generate_float(min_value, max_value):
     """
     生成指定范围内的浮点数，并保留两位小数点。
@@ -315,7 +317,7 @@ def get_current_time():
         获取当前时间
         '''
         china_tz = pytz.timezone('Asia/Shanghai')
-        current_time = datetime.datetime.now(china_tz)
+        current_time = datetime.now(china_tz)
         return current_time.strftime("%Y-%m-%d %H:%M:%S")
 
 def get_real_ip():
@@ -338,3 +340,88 @@ def get_real_ip():
         real_ip = request.remote_addr
 
     return real_ip
+
+
+#处理时间格式方法
+def datetime_string(datetime_str):
+    """
+    解析日期时间字符串，支持多种格式
+    :param datetime_str: 日期时间字符串
+    :return: datetime对象
+    """
+    if isinstance(datetime_str, datetime):
+        return datetime_str
+        
+    if not isinstance(datetime_str, str):
+        raise ValueError(f"输入必须是字符串或datetime对象，得到的是: {type(datetime_str)}")
+        
+    # 尝试不同的日期时间格式
+    formats = [
+        '%Y-%m-%d %H:%M:%S.%f',  # 带微秒
+        '%Y-%m-%d %H:%M:%S',     # 标准格式
+        '%Y-%m-%d %H:%M:%S.000'  # 带.000后缀
+    ]
+    
+    for fmt in formats:
+        try:
+            return datetime.strptime(datetime_str, fmt)
+        except ValueError:
+            continue
+            
+    # 如果所有格式都失败，则抛出异常
+    raise ValueError(f"无法解析日期时间字符串: {datetime_str}")
+
+def jsonToString(data, **kwargs):
+    """安全地将数据转换为JSON字符串"""
+    # 设置默认参数
+    kwargs.setdefault('ensure_ascii', False)
+    
+    def json_serial(obj):
+        """处理不能直接序列化为JSON的对象"""
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        elif isinstance(obj, bytes):
+            return obj.decode('utf-8')
+        raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+    
+    try:
+        return json.dumps(data, default=json_serial, **kwargs)
+    except Exception as e:
+        print(f"JSON序列化错误: {e}")
+        return "{}"  # 返回空对象作为默认值
+    
+# ... existing code ...
+
+def stringToJson(json_string, default=None):
+    """
+    将JSON字符串转换为Python对象
+    
+    Args:
+        json_string: JSON格式的字符串
+        default: 解析失败时返回的默认值，默认为None
+        
+    Returns:
+        dict/list: 解析后的Python对象（字典或列表）
+        
+    Example:
+        json_str = '{"name": "张三", "age": 25}'
+        data = StringToJson(json_str)
+        
+        json_str = '[1, 2, 3, 4]'
+        data = StringToJson(json_str)
+    """
+    import json
+    
+    if default is None:
+        default = {}
+        
+    if not json_string:
+        return default
+        
+    try:
+        return json.loads(json_string)
+    except (json.JSONDecodeError, TypeError) as e:
+        print(f"JSON解析错误: {e}")
+        return default
+
+# ... existing code ...
