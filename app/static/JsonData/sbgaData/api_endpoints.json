@@ -3,7 +3,7 @@
         "id": 1,
         "name": "get查询ybss中总人数",
         "method": "GET",
-        "url": "http://127.0.0.1:5004/ry/query",
+        "url": "http://127.0.0.1:5005/ry/query",
         "params": [
             {
                 "key": "action",
@@ -47,7 +47,7 @@
         "id": 3,
         "name": "helloworld",
         "method": "GET",
-        "url": "http://127.0.0.1:5004/",
+        "url": "http://127.0.0.1:5005/",
         "params": [],
         "headers": [
             {
