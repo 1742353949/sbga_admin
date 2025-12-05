@@ -64,9 +64,9 @@ def create_app():
     from app.routes.Admin.ImportRoute import import_bp
     app.register_blueprint(import_bp)
     
-       # 注册二次预警测试
-    from app.controllers.Ecyjcl import ecyj
-    app.register_blueprint(ecyj)
+       # 导入联防智治路由
+    from app.routes.LFZZ.YhyjRoute.YhyjRoute import lfzz
+    app.register_blueprint(lfzz)
     
     
     

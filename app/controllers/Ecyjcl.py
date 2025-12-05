@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 # 导入JSON模块，用于处理codes/names字段的序列化与反序列化
 import json
 from app.helper.helper import *
+import ast
+
 
 # 创建Flask蓝图，命名为'ecyj'，URL前缀为'/ecyj'，统一管理预警相关接口路由
 ecyj = Blueprint('ecyj', __name__, url_prefix='/ecyj')
@@ -57,7 +59,7 @@ class ecyj_tb(MySQLHelper):
         return info_temp_records
     
     #计算结束时间方法
-    def calculate_time_range(self):
+    def calculate_time_range(self,start_time):
         """
         计算结束时间（原有注释保留）
         根据配置参数计算结束时间        
@@ -74,7 +76,7 @@ class ecyj_tb(MySQLHelper):
             people_num = 2  # 默认最小合并数量（至少2个才触发合并）       
         print('=== 配置参数 ===', times,ex_time,people_num)             
        #计算结束时间=当前时间+配置参数中的时间阈值      
-        end_time = datetime.now() + timedelta(minutes=times + ex_time)       
+        end_time = start_time + timedelta(minutes=times + ex_time)       
         end_time_str = end_time.strftime('%Y-%m-%d %H:%M:%S') 
         print('=== 结束时间 ===', end_time_str)      
         return end_time_str 
@@ -85,149 +87,257 @@ class ecyj_tb(MySQLHelper):
     
 # 实例化预警数据处理类，供接口调用
 c_ecyj = ecyj_tb()
-def yddr(now_data = None,):  
-    '''实现一点多人逻辑'''
-    #查询hist表数据 where objType=5 limit 100;
-    hist_records=c_ecyj.execute_query("SELECT * FROM wd_glsyj_xq_his WHERE objType=5 order by id desc LIMIT 1000")
-    print(f'=== 待处理hist记录长度{len(hist_records)} ===')
-    # hist_records = now_data
-    #info_temp_records=c_ecyj.execute_query("SELECT * FROM info_temp where type='yddr' order by id desc LIMIT 100")
-    #print('=== 待处理info_temp记录 ===', info_temp_records)
+# def yddr(now_data = None,num_people=None):  
+#     '''实现一点多人逻辑'''
+        # 删除hist表中name为空或空字符串的无效数据，避免无效数据干扰合并逻辑
+    #   delete_empty_sql = "DELETE FROM hist WHERE name IS NULL OR name = ''"
+    #   self.execute_update(delete_empty_sql)
+#     #查询hist表数据 where objType=5 limit 100;
+#     hist_records=c_ecyj.execute_query("SELECT * FROM wd_glsyj_xq_his WHERE objType=5 order by capTime asc LIMIT 1000")
+#     print(f'=== 待处理hist记录长度{len(hist_records)} ===')
+#     # hist_records = now_data
+#     #info_temp_records=c_ecyj.execute_query("SELECT * FROM info_temp where type='yddr' order by id desc LIMIT 100")
+#     #print('=== 待处理info_temp记录 ===', info_temp_records)
     
         
-    #遍历hist表数据
-    for hist_record in hist_records:
-        id = hist_record['id']
-        idstr = str(id)
-        channel_id = hist_record['channelId']
-        channel_name = hist_record['channelName']            
-        carno = hist_record['cardNo']
-        name = hist_record['objName']
-        cap_timestr = hist_record['capTime']
-        alarmTimeStr=hist_record['alarmTime']
-        if name is None or name == '':
-            continue
-        print(name)
+#     #遍历hist表数据
+#     for hist_record in hist_records:
+#         id = hist_record['id']
+#         idstr = str(id)
+#         channel_id = hist_record['channelId']
+#         channel_name = hist_record['channelName']            
+#         carno = hist_record['cardNo']
+#         name = hist_record['name']
+#         cap_timestr = hist_record['capTime']
+#         alarmTimeStr=hist_record['alarmTime']
+#         if name is None or name == '':
+#             continue
+#         print(name)
     
-        # 转换captimestr字段将capTimestr与info_temp记录的时间段进行对比
-        try:
-            # 使用更灵活的方式解析时间字符串
-            cap_time = datetime_string(cap_timestr)
-            alarmTimeStr=datetime_string(alarmTimeStr)
-        except ValueError as e:
-            print(f"时间转换错误: {e}，原始时间字符串: {cap_timestr}")
-            continue
-        print(f"待处理hist记录 {id} 的channel_id {channel_id},cap_time: {cap_time}")
-        #查询info_temp表数据中 hist_record 对应的 channel_id 的记录 是否存在于 info_temp中 条件 channel_id,cap_timestr in start_time, end_time,type = 'yddr'
-        sql = f"SELECT * FROM info_temp WHERE codes like '%{channel_id}%'  AND ( '{cap_time}' BETWEEN start_time AND end_time ) AND type = 'yddr' order by id desc LIMIT 200"
-        info_temp_records = c_ecyj.execute_query(sql) # 
-        if len(info_temp_records) > 0:#存在
-            print(f'=== 待处理info_temp记录 长度 {len(info_temp_records)} ===')
-            info_record =info_temp_records[0] 
-            # id 插入ids[],objName 插入names[],channelName插入channel_names[],cardNo插入yrdd_card_no[],wd_glsyj_xq_ids插入ids[],codes插入codes[]
-            # info_record = json.loads(info_record)
-            info_id = info_record['id']
-            info_names = json.loads(info_record['names']) if info_record['names'] else []
-            info_ids = json.loads(info_record['wd_glsyj_xq_ids']) if info_record['wd_glsyj_xq_ids'] else []  
-            info_codes = json.loads(info_record['codes']) if info_record['codes'] else [] 
+#         # 转换captimestr字段将capTimestr与info_temp记录的时间段进行对比
+#         try:
+#             # 使用更灵活的方式解析时间字符串
+#             cap_time = datetime_string(cap_timestr)
+#             alarmTimeStr=datetime_string(alarmTimeStr)
+#         except ValueError as e:
+#             print(f"时间转换错误: {e}，原始时间字符串: {cap_timestr}")
+#             continue
+#         print(f"待处理hist记录 {id} 的channel_id {channel_id},cap_time: {cap_time}")
+#         #查询info_temp表数据中 hist_record 对应的 channel_id 的记录 是否存在于 info_temp中 条件 channel_id,cap_timestr in start_time, end_time,type = 'yddr'
+#         sql = f"SELECT * FROM info_temp WHERE codes like '%{channel_id}%'  AND ( '{cap_time}' BETWEEN start_time AND end_time ) AND type = 'yddr'  LIMIT 200"
+#         info_temp_records = c_ecyj.execute_query(sql) # 
+#         if len(info_temp_records) > 0:#存在
+#             print(f'=== 待处理info_temp记录 长度 {len(info_temp_records)} ===')
+#             info_record =info_temp_records[0] 
+#             # id 插入ids[],objName 插入names[],channelName插入channel_names[],cardNo插入yrdd_card_no[],wd_glsyj_xq_ids插入ids[],codes插入codes[]
+#             # info_record = json.loads(info_record)
+#             info_id = info_record['id']
+#             info_names = json.loads(info_record['names']) if info_record['names'] else []
+#             info_ids = json.loads(info_record['wd_glsyj_xq_ids']) if info_record['wd_glsyj_xq_ids'] else []  
+#             info_codes = json.loads(info_record['codes']) if info_record['codes'] else [] 
             
-            start_time = info_record['start_time']
-            end_time = info_record['end_time']
+#             start_time = info_record['start_time']
+#             end_time = info_record['end_time']
             
             
-            print(f"匹配: hist记录 {id} 的channel_id {channel_id} 与 info记录 {info_record['id']} 的channel_id {info_codes} 一致")
-            #3.进行数据合并
-            merged_type = "yddr"
+#             print(f"匹配: hist记录 {id} 的channel_id {channel_id} 与 info记录 {info_record['id']} 的channel_id {info_codes} 一致")
+#             #3.进行数据合并
+#             merged_type = "yddr"
             
-            #1.判断hist['id']是否在info_record['wd_glsyj_xq_ids']中
-            if idstr not in info_ids:
-                # people_num=
-                # print(f"出现次数次有 {people_num} 个人")
-                #4.执行数据更新表info_temp表：用MySQL的JSON_OBJECT构造JSON，避免重复转义
-                try:
-                    wd_glsyj_json = json.loads(info_record["wd_glsyj_json"])
-                except json.JSONDecodeError as e:
-                    wd_glsyj_json = []
-                    print(f"{info_record["wd_glsyj_json"]}, /n wd_glsyj_json JSON解析错误: {e}")
+#             #1.判断hist['id']是否在info_record['wd_glsyj_xq_ids']中
+#             if idstr not in info_ids:
+#                 # people_num=
+#                 # print(f"出现次数次有 {people_num} 个人")
+#                 #4.执行数据更新表info_temp表：用MySQL的JSON_OBJECT构造JSON，避免重复转义
                 
-                wd_glsyj_json.append(hist_record)
+#                 names = json.loads(info_record["names"])
+#                 names.append(name)
                 
-                names = json.loads(info_record["names"])
-                names.append(name)
+#                 yddr_card_no = json.loads(info_record["yddr_card_no"])
+#                 yddr_card_no.append(carno)
                 
-                yddr_card_no = json.loads(info_record["yddr_card_no"])
-                yddr_card_no.append(carno)
+#                 wd_glsyj_xq_ids = json.loads(info_record["wd_glsyj_xq_ids"])
+#                 wd_glsyj_xq_ids.append(f'{id}')
                 
-                wd_glsyj_xq_ids = json.loads(info_record["wd_glsyj_xq_ids"])
-                wd_glsyj_xq_ids.append(id)
+#                 if name in info_names:
+#                     print(f"{name} 不在 id 为 {info_id}的数据 {info_names} 中")
+#                     print(info_names)
+#                     index =  info_names.index(name)
+#                     print(f"{name}在 id 为 {info_id}的数据 {info_names} 中所在位置为 {index}")
+#                     wd_glsyj_xq_num = stringToJson(info_record['wd_glsyj_xq_num'])
+#                     print(wd_glsyj_xq_num[index])
+#                     wd_glsyj_xq_num[index] = int(wd_glsyj_xq_num[index]) + 1
+#                     print(wd_glsyj_xq_num)
+                    
+#                     update_sql = f"""
+#                                     UPDATE info_temp 
+#                                     set
+#                                     wd_glsyj_xq_num = '{jsonToString(wd_glsyj_xq_num)}'
+#                                     where id = {info_id}; 
+#                                     """
+#                     print(update_sql)           
+#                     c_ecyj.execute_update(update_sql)              
+#                     print(f"不合并:  {id}  存在 info记录 id为{info_id}的 {info_ids}数据中 ,计数+1")
+#                 else:
+#                     update_sql = f"""
+#                                     UPDATE info_temp 
+#                                     SET type = '{merged_type}', 
+#                                     names = '{jsonToString(names)}', 
+#                                     yddr_card_no = '{jsonToString(yddr_card_no)}',
+#                                     wd_glsyj_xq_ids = '{jsonToString(wd_glsyj_xq_ids)}',
+#                                     wd_glsyj_xq_num = json_array_append(wd_glsyj_xq_num, '$',{1}),
+#                                     times=NOW(),
+#                                     update_time = NOW()
+#                                     WHERE id = {info_id};
+#                                     """
+#                     c_ecyj.execute_update(update_sql)
+#                 # print(f"合并成功：info_temp记录 {info_record['id']},sql: {update_sql}")
                 
                 
-                update_sql = f"""
-                                UPDATE info_temp 
-                                SET type = '{merged_type}', 
-                                names = '{jsonToString(names)}', 
-                                yddr_card_no = '{jsonToString(yddr_card_no)}',
-                                wd_glsyj_xq_ids = '{jsonToString(wd_glsyj_xq_ids)}',
-                                wd_glsyj_xq_num = json_array_append(wd_glsyj_xq_num, '$',{1}),
-                                times='{alarmTimeStr}',
-                                wd_glsyj_json = '{jsonToString(wd_glsyj_json)}',
-                                update_time = NOW()
-                                WHERE id = {info_id};
-                                """
-                c_ecyj.execute_update(update_sql)
-                # print(f"合并成功：info_temp记录 {info_record['id']},sql: {update_sql}")
-            else:
-                print(info_names)
-                index =  info_names.index(name)
-                print(f"{name}在 id 为 {info_id}的数据 {info_names} 中所在位置为 {index}")
-                wd_glsyj_xq_num = stringToJson(info_record['wd_glsyj_xq_num'])
-                print(wd_glsyj_xq_num[index])
-                wd_glsyj_xq_num[index] = int(wd_glsyj_xq_num[index]) + 1
-                print(wd_glsyj_xq_num)
-                
-                update_sql = f"""
-                                UPDATE info_temp 
-                                set
-                                wd_glsyj_xq_num = '{jsonToString(wd_glsyj_xq_num)}'
-                                where id = {info_id}; 
-                                """
-                print(update_sql)           
-                c_ecyj.execute_update(update_sql)              
-                print(f"不合并:  {id}  存在 info记录 id为{info_id}的 {info_ids}数据中 ,计数+1")
+#             else: # 如果id已经存在
+#                 continue
               
-        else: #不存在
-            print(f"不匹配: hist记录 {id} 的时间 {cap_time} 不在 info记录中 记录长度 {len(info_temp_records)} ")
-            end_time=c_ecyj.calculate_time_range()
-            # print(f"记录{hist_record}")
-            # # print(idstr)
-            cap_time_str = datetime_string(hist_record['capTime'])
+#         else: #不存在
+#             print(f"不匹配: hist记录 {id} 的时间 {alarmTimeStr} 不在 info记录中 记录长度 {len(info_temp_records)} ")
+    
+#             end_time=c_ecyj.calculate_time_range(alarmTimeStr)
             
-            # 简化wd_glsyj_json组装：复用字典，插入时直接json.dumps（仅一次转义）
-            wd_glsyj_json = json.dumps({
-                'id': idstr,
-                'channelId': str(channel_id),
-                'channelName': channel_name,
-                'name': name,
-                'cardNo': str(carno) if carno else '',
-                'capTimestr': cap_time_str
-            }, ensure_ascii=False)
-            
-            # wd_glsyj_json = hist_record
-            
-            print(wd_glsyj_json)
-            
-            c_ecyj.execute_update("INSERT INTO info_temp (type,wd_ecyj_id, codes,times,people_num,dw_num,wd_glsyj_xq_ids,start_time, end_time,wd_glsyj_xq_num,wd_glsyj_json,yddr_card_no, names, channel_names) VALUES ( %s, %s, %s, %s,%s, %s, %s,%s, %s, %s, %s,%s, %s, %s)",
-                                (
-                                    "yddr",1,jsonToString([channel_id]),alarmTimeStr,1,1, json.dumps([idstr]), cap_timestr,end_time,json.dumps([1]),jsonToString([wd_glsyj_json]),json.dumps([str(carno)]), jsonToString([name]),json.dumps([channel_name])
-                                )
-            )       
+#             c_ecyj.execute_update("INSERT INTO info_temp (type,wd_ecyj_id, codes,times,people_num,dw_num,wd_glsyj_xq_ids,start_time, end_time,wd_glsyj_xq_num,yddr_card_no, names, channel_names) VALUES ( %s, %s, %s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s)",
+#                                 (
+#                                     "yddr",1,jsonToString([channel_id]),datetime.now(),1,1,jsonToString([idstr]), cap_timestr,end_time,jsonToString([1]),jsonToString([carno]), jsonToString([name]),jsonToString([channel_name])
+#                                 )
+#             )       
         
+#         #判断当前id 记录end_time 是否结束 
+
+#         #判断当前id 记录 names 的人数 是否达到阈值，是 将该记录插入到 info 表中 否 删除该记录（是否删除无效数据）
         
-    return "执行成功"
+#     return "执行成功"
 
 # def yrdd():
 #     '''实现一人多点逻辑'''
-#     return 0
+#     #查询hist表数据 where objType=5 limit 100;
+#     hist_records=c_ecyj.execute_query("SELECT * FROM wd_glsyj_xq_his WHERE objType=5 order by capTime asc LIMIT 1000")
+#     print(f'=== 待处理hist记录长度{len(hist_records)} ===')
+#     # hist_records = now_data
+#     #info_temp_records=c_ecyj.execute_query("SELECT * FROM info_temp where type='yddr' order by id desc LIMIT 100")
+#     #print('=== 待处理info_temp记录 ===', info_temp_records)
+    
+        
+#     #遍历hist表数据
+#     for hist_record in hist_records:
+#         id = hist_record['id']
+#         idstr = str(id)
+#         channel_id = hist_record['channelId']
+#         channel_name = hist_record['channelName']            
+#         carno = hist_record['cardNo']
+#         name = hist_record['name']
+#         cap_timestr = hist_record['capTime']
+#         alarmTimeStr=hist_record['alarmTime']
+#         if name is None or name == '':
+#             continue
+#         print(name)
+    
+#         # 转换captimestr字段将capTimestr与info_temp记录的时间段进行对比
+#         try:
+#             # 使用更灵活的方式解析时间字符串
+#             cap_time = datetime_string(cap_timestr)
+#             alarmTimeStr=datetime_string(alarmTimeStr)
+#         except ValueError as e:
+#             print(f"时间转换错误: {e}，原始时间字符串: {cap_timestr}")
+#             continue
+        
+#         print(f"待处理hist记录 {id} 的objname {name},alarmTimeStr: {alarmTimeStr}")
+#         #查询info_temp表数据中 hist_record 对应的 channel_id 的记录 是否存在于 info_temp中 条件 channel_id,cap_timestr in start_time, end_time,type = 'yddr'
+#         sql = f"SELECT * FROM info_temp WHERE codes like '%{channel_id}%'  AND ( '{cap_time}' BETWEEN start_time AND end_time ) AND type = 'yddr'  LIMIT 200"
+#         info_temp_records = c_ecyj.execute_query(sql) # 
+#         if len(info_temp_records) > 0:#存在
+#             print(f'=== 待处理info_temp记录 长度 {len(info_temp_records)} ===')
+#             info_record =info_temp_records[0] 
+#             # id 插入ids[],objName 插入names[],channelName插入channel_names[],cardNo插入yrdd_card_no[],wd_glsyj_xq_ids插入ids[],codes插入codes[]
+#             # info_record = json.loads(info_record)
+#             info_id = info_record['id']
+#             info_names = json.loads(info_record['names']) if info_record['names'] else []
+#             info_ids = json.loads(info_record['wd_glsyj_xq_ids']) if info_record['wd_glsyj_xq_ids'] else []  
+#             info_codes = json.loads(info_record['codes']) if info_record['codes'] else [] 
+            
+#             start_time = info_record['start_time']
+#             end_time = info_record['end_time']
+            
+            
+#             print(f"匹配: hist记录 {id} 的channel_id {channel_id} 与 info记录 {info_record['id']} 的channel_id {info_codes} 一致")
+#             #3.进行数据合并
+#             merged_type = "yddr"
+            
+#             #1.判断hist['id']是否在info_record['wd_glsyj_xq_ids']中
+#             if idstr not in info_ids:
+#                 # people_num=
+#                 # print(f"出现次数次有 {people_num} 个人")
+#                 #4.执行数据更新表info_temp表：用MySQL的JSON_OBJECT构造JSON，避免重复转义
+                
+#                 names = json.loads(info_record["names"])
+#                 names.append(name)
+                
+#                 yddr_card_no = json.loads(info_record["yddr_card_no"])
+#                 yddr_card_no.append(carno)
+                
+#                 wd_glsyj_xq_ids = json.loads(info_record["wd_glsyj_xq_ids"])
+#                 wd_glsyj_xq_ids.append(f'{id}')
+                
+#                 if name in info_names:
+#                     print(f"{name} 不在 id 为 {info_id}的数据 {info_names} 中")
+#                     print(info_names)
+#                     index =  info_names.index(name)
+#                     print(f"{name}在 id 为 {info_id}的数据 {info_names} 中所在位置为 {index}")
+#                     wd_glsyj_xq_num = stringToJson(info_record['wd_glsyj_xq_num'])
+#                     print(wd_glsyj_xq_num[index])
+#                     wd_glsyj_xq_num[index] = int(wd_glsyj_xq_num[index]) + 1
+#                     print(wd_glsyj_xq_num)
+                    
+#                     update_sql = f"""
+#                                     UPDATE info_temp 
+#                                     set
+#                                     wd_glsyj_xq_num = '{jsonToString(wd_glsyj_xq_num)}'
+#                                     where id = {info_id}; 
+#                                     """
+#                     print(update_sql)           
+#                     c_ecyj.execute_update(update_sql)              
+#                     print(f"不合并:  {id}  存在 info记录 id为{info_id}的 {info_ids}数据中 ,计数+1")
+#                 else:
+#                     update_sql = f"""
+#                                     UPDATE info_temp 
+#                                     SET type = '{merged_type}', 
+#                                     names = '{jsonToString(names)}', 
+#                                     yddr_card_no = '{jsonToString(yddr_card_no)}',
+#                                     wd_glsyj_xq_ids = '{jsonToString(wd_glsyj_xq_ids)}',
+#                                     wd_glsyj_xq_num = json_array_append(wd_glsyj_xq_num, '$',{1}),
+#                                     times=NOW(),
+#                                     update_time = NOW()
+#                                     WHERE id = {info_id};
+#                                     """
+#                     c_ecyj.execute_update(update_sql)
+#                 # print(f"合并成功：info_temp记录 {info_record['id']},sql: {update_sql}")
+                
+                
+#             else: # 如果id已经存在
+#                 continue
+              
+#         else: #不存在
+#             print(f"不匹配: hist记录 {id} 的时间 {cap_time} 不在 info记录中 记录长度 {len(info_temp_records)} ")
+    
+#             end_time=c_ecyj.calculate_time_range(alarmTimeStr)
+            
+#             c_ecyj.execute_update("INSERT INTO info_temp (type,wd_ecyj_id, codes,times,people_num,dw_num,wd_glsyj_xq_ids,start_time, end_time,wd_glsyj_xq_num,yddr_card_no, names, channel_names) VALUES ( %s, %s, %s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s)",
+#                                 (
+#                                     "yddr",1,jsonToString([channel_id]),datetime.now(),1,1,jsonToString([idstr]), cap_timestr,end_time,jsonToString([1]),jsonToString([carno]), jsonToString([name]),jsonToString([channel_name])
+#                                 )
+#             )       
+        
+#         #判断当前id 记录end_time 是否结束 
+
+#         #判断当前id 记录 names 的人数 是否达到阈值，是 将该记录插入到 info 表中 否 删除该记录（是否删除无效数据）
+        
+#     return "执行成功"
 
 # def ycdq():
 #     '''实现一人多点逻辑'''
@@ -250,5 +360,5 @@ def process_hist_data():
     #     # 捕获异常，返回错误信息和500服务器错误状态码
     #     print(f"❌ 接口处理异常：{str(e)}")
     #     return jsonify({"error": str(e)}), 500
-    result = yddr()
+    result = yrdd()
     return jsonify(result)  # 返回成功响应

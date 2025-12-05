@@ -81,7 +81,7 @@
         "id": 5,
         "name": "查询插入二次预警信息",
         "method": "GET",
-        "url": "http://127.0.0.1:5004/ecyj/process_hist_data",
+        "url": "http://127.0.0.1:5004/lfzz/process_hist_data",
         "params": [],
         "headers": [
             {
